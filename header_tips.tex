@@ -1,0 +1,118 @@
+% Tips with rmarkdown
+% author : Sébastien Rochette
+% contact : sebastienrochettefr@gmail.com
+% website : https://statnmap.com
+
+% -- Command to find which language is loaded in babel -- %
+% http://tex.stackexchange.com/questions/287667/ifpackagewith-doesnt-behave-as-i-expected-with-global-options
+\usepackage{xparse}
+\ExplSyntaxOn
+\NewDocumentCommand{\packageoptionsTF}{mmmm}
+ {
+  \stanton_package_options:nnTF { #1 } { #2 } { #3 } { #4 }
+ }
+
+\cs_new_protected:Nn \stanton_package_options:nnTF
+ {
+  \clist_map_inline:nn { #2 }
+   {
+    \clist_if_in:cnTF { opt@#1.sty } { ##1 }
+     { #3 } % it's a local option
+     {
+      \clist_if_in:cnTF { @classoptionslist } { ##1 }
+       { #3 } % it's a global option
+       { #4 }
+     }
+   }
+}
+\ExplSyntaxOff
+
+% -- Define a variable depending on language -- %
+\newcommand{\Lang}{0}
+
+\makeatletter
+\@ifpackageloaded{babel}{
+  \packageoptionsTF{babel}{english}{%
+    \renewcommand{\Lang}{1}% english
+  }{%
+    \renewcommand{\Lang}{2}% french
+  }
+}{}
+\makeatother
+
+% -- Define specific lateX options depending on language -- %
+\ifnum\Lang = 1
+  \usepackage{enumitem}
+  \setlist{itemsep = 0pt}
+  \setlist{topsep = 0pt}
+\fi
+\ifnum\Lang = 2
+%
+\fi
+
+% -- Texte coloration setups -- %
+\usepackage{xcolor}
+\definecolor{blueSeb}{RGB}{30,115,190}
+\definecolor{advertcolor}{HTML}{FF8929}
+% \definecolor{blueShaded}{HTML}{D6E8F5}
+
+\definecolor{backcolor}{RGB}{235, 235, 235}
+\newcommand{\mybox}[1]{\par\noindent\colorbox{backcolor}
+  {\parbox{\dimexpr\textwidth-2\fboxsep\relax}{#1}}}
+
+\newcommand{\advert}[1]{\textit{\textcolor{advertcolor}{#1}}}
+\newcommand{\codecommand}[1]{\texttt{\colorbox{backcolor}{#1}}}
+
+% - source: http://tex.stackexchange.com/questions/82028/how-do-i-create-a-variant-of-the-snugshade-box-from-the-framed-package-to-wrap-m
+\newenvironment{blueShaded}[1][D6E8F5]{
+  \definecolor{shadecolor}{HTML}{#1}%
+  \begin{snugshade}%
+}{%
+    \end{snugshade}%
+}
+
+% -- Sections format -- %
+%% Provide a definition to \subparagraph to keep titlesec happy
+\let\subparagraph\oldsubparagraph
+\let\paragraph\oldparagraph
+%% Load titlesec
+%\usepackage[compact]{titlesec}
+\usepackage{titlesec}
+%% Revert \subparagraph to the Rmd definition
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+
+%\titleformat{(command)}[(shape)]{(format)}{(label)}{(sep)}{(before)}[(after)]
+\titleformat{\section}%
+[hang]% style du titre (hang, display, runin, leftmargin, drop, wrap)
+{\Large\color[RGB]{30,115,190}}%changement de fonte commun au numéro et au titre
+{\thesection.}% spécification du numéro
+{1em}% 1em espace entre le numéro et le titre
+{}% changement de fonte du titre
+  
+\titleformat{\subsection}%
+[hang]% style du titre (hang, display, runin, leftmargin, drop, wrap)
+{\large\bfseries} %\itshape {\Large\bfseries\color[RGB]{30,115,190}}%changement de fonte commun au numéro et au titre
+{\thesubsection.}% spécification du numéro
+{1em}% {1em}% espace entre le numéro et le titre
+{}% changement de fonte du titre
+
+%\titlespacing*{(command)}{(left)}{(beforesep)}{(aftersep)}[(right)]
+\titlespacing*{\section}{0em}{*4}{*1}
+
+
+
+% -- Other lateX setup -- %
+\hypersetup{pdfauthor=StatnMap, pdftitle=Tips with Rmarkdown, pdfkeywords=R-rmarkdown, pdfcreator=pdflatex}
+\hypersetup{linktocpage=true, colorlinks=true, linkcolor=[RGB]{30,115,190}, citecolor=[RGB]{30,115,190}, filecolor=[RGB]{30,115,190}, urlcolor=[RGB]{30,115,190}}
+
+\setcounter{section}{0} % Value for first section
+
