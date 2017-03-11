@@ -56,10 +56,48 @@ knit_hooks$set(source = function(x, options) {
      hook_source_def(x, options)
   }
 })
+# Source the formatting functions detailed below
+source("./functions.R")
 
 ```
+***
 `r if (lang == "EN") {knitr::include_graphics('./myfigdirectory/gb.png', dpi = 400)} else if (lang == "FR") {knitr::include_graphics('./myfigdirectory/fr.png', dpi = 400)}` `r if (lang == "EN") {"This version is the english version."} else if (lang == "FR") {"Cette version est la version française."}`  
 
+<!-- english -->
+```{r WebsiteEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
+if (knitr:::pandoc_to() == "html") {beginStyleFmt("Large", "div")}
+cat(
+'Go back on my website:  
+[![](./myfigdirectory/Logo_EN_small.png)](https://statnmap.com/en/)  
+[HOME](https://statnmap.com/en/) | [BLOG](https://statnmap.com/en/category/blog/) | [TUTORIALS](https://statnmap.com/en/courses-formation-sig-dans-r-et-qgis/) | [CONTACT](https://statnmap.com/en/contact/)',
+sep = "")
+if (knitr:::pandoc_to() == "html") {endStyleFmt("Large", "div")}
+```
+<!-- french -->
+```{r WebsiteFR, echo=FALSE, eval=(lang == "FR"), results='asis'}
+if (knitr:::pandoc_to() == "html") {beginStyleFmt("Large", "div")}
+cat(
+'Retourner sur le site Internet :  
+[![](./myfigdirectory/Logo_FR_small.png)](https://statnmap.com/)  
+[ACCUEIL](https://statnmap.com/) | [BLOG](https://statnmap.com/category/blog/) | [FORMATIONS](https://statnmap.com/courses-formation-sig-dans-r-et-qgis/) | [CONTACT](https://statnmap.com/en/contact/)',
+sep = "")
+if (knitr:::pandoc_to() == "html") {endStyleFmt("Large", "div")}
+```
+
+<!-- english -->
+```{r PresentEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
+cat(
+'_This page is presented [here on my website](https://statnmap.com/2017/03/rmarkdown-conditional-chunks-to-create-multilingual-pdf-and-html-with-images/)_',
+sep = "")
+```
+<!-- french -->
+```{r PresentFR, echo=FALSE, eval=(lang == "FR"), results='asis'}
+cat(
+'_Cette page est présentée [ici sur mon site Internet](https://statnmap.com/2017/03/rmarkdown-conditional-chunks-to-create-multilingual-pdf-and-html-with-images/)_',
+sep = "")
+```
+
+***
 <!-- english -->
 ```{r KnitMultipleEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
 cat(
@@ -79,7 +117,7 @@ In this article, I list some of the tips I have to use to make this work and som
 - Output R-script included in chunks for tutorials, with different versions for teacher and students.
 
 I will modify this list if I face new difficulties or I find better ways to do things.  
-Files needed to create this article are stored [here on my github](https://github).',
+Files needed to create this article are stored [here on my github](https://github.com/statnmap/Rmarkdown_tips).',
 sep = "")
 ```
 <!-- french -->
@@ -102,7 +140,7 @@ Dans cet article, je liste différentes astuces que je dois utiliser pour rendre
 - Sortir d\'un fichier rmarkdown le code R des "chunks" pour vos formations, avec une version différente entre le formateur et les participants.  
 
 Je modifirai la liste si je fais face à de nouvelles difficultés ou si je trouve de meilleures manières de faire les choses.  
-Les fichiers nécessaires à la création de cet article sont [ici sur mon github](https://github).',
+Les fichiers nécessaires à la création de cet article sont [ici sur mon github](https://github.com/statnmap/Rmarkdown_tips).',
 sep = "")
 ```
 
@@ -116,11 +154,11 @@ cat(
 '## Functions for html or pdf specific rendering
 Because some text and background colors are not written in the same way for html and lateX outputs, I need to use functions that will add either html formatting or latex formatting:  
 
-- "colFmt" is used directly with color names like blue, red, ...
-- "styleFmt" is used in combination with definition of a style in external files.
-- "beginStyleFmt" and "endStyleFmt" are a separated variante of "styleFmt" to be used if your text contain special characters (like underscore) that may be misinterpretated by lateX.  
-Option "type" can be defined to use "div" instead of "span" to allow multiple lines with html output. Similarly for latex, if $type == "div"$ is defined, command will be used with "begin" and "end".  
-- "beginVerbatim" and "endVerbatim" are specific to embed verbatim code text with background color, which is not implemented by default in lateX.',
+- ', styleFmt("colFmt", "codecommand"), ' is used directly with color names like blue, red, ...
+- ', styleFmt("styleFmt", "codecommand"), ' is used in combination with definition of a style in external files.
+- ', styleFmt("beginStyleFmt", "codecommand"), ' and ', styleFmt("endStyleFmt", "codecommand"), ' are a separated variante of ', styleFmt("styleFmt", "codecommand"), ' to be used if your text contain special characters (like underscore) that may be misinterpretated by lateX.  
+Option ', styleFmt("type", "codecommand"), ' can be defined to use ', styleFmt("div", "codecommand"), ' instead of ', styleFmt("span", "codecommand"), ' to allow multiple lines with html output. Similarly for latex, if ', styleFmt("type == \"div\"", "codecommand"), ' is defined, command will be used with ', styleFmt("begin", "codecommand"), ' and ', styleFmt("end", "codecommand"), '.  
+- ', styleFmt("beginVerbatim", "codecommand"), ' and ', styleFmt("endVerbatim", "codecommand"), ' are specific to embed verbatim code text with background color, which is not implemented by default in lateX.',
 sep = "")
 ```
 <!-- français -->
@@ -129,11 +167,11 @@ cat(
 '## Fonctions pour créer un rendu spécifique selon le format html ou pdf
 Les couleurs de texte ou de fond ne se codent pas de la même manière en html ou en lateX. J\'ai donc créé des fonctions spécifiques qui reconnaissent le format de sortie et ajoute le code de formattage adéquat:
 
-- "colFmt" est utilisé pour colorer du texte en utilisant les noms des couleurs reconnues en lateX et html comme "blue", "red", ...
-- "styleFmt" est utilisé en combinaison avec la définition de styles dans un fichier à part.
-- "beginStyleFmt" et "endStyleFmt" sont une variante séparée de "styleFmt" qui peut s\'utiliser lorsqu\'il y a des caractères spéciaux dans le texte (comme underscore) qui peuvent être mal interprétés avec lateX.  
-L\'ption "type" permet notamment d\'utiliser "div" au lieu de "span" pour permettre d\'afficher du texte sur plusieurs lignes. De manière similaire avec lateX, si $type == "div"$ est défini, la commande utilisera une ouverture du format avec $begin$ et une fermeture avec $end$.  
-- "beginVerbatim" et "endVerbatim" sont spécifiques au format "verbatim". Ces fonctions permettent d\'encadrer une zone de code avec une couleur de fond, ce qui n\'est pas implémenté par défaut avec lateX notamment.',
+- ', styleFmt("colFmt", "codecommand"), ' est utilisé pour colorer du texte en utilisant les noms des couleurs reconnues en lateX et html comme "blue", "red", ...
+- ', styleFmt("styleFmt", "codecommand"), ' est utilisé en combinaison avec la définition de styles dans un fichier à part.
+- ', styleFmt("beginStyleFmt", "codecommand"), ' et ', styleFmt("endStyleFmt", "codecommand"), ' sont une variante séparée de ', styleFmt("styleFmt", "codecommand"), ' qui peut s\'utiliser lorsqu\'il y a des caractères spéciaux dans le texte (comme underscore) qui peuvent être mal interprétés avec lateX.  
+L\'ption ', styleFmt("type", "codecommand"), ' permet notamment d\'utiliser ', styleFmt("div", "codecommand"), ' au lieu de ', styleFmt("span", "codecommand"), ' pour permettre d\'afficher du texte sur plusieurs lignes. De manière similaire avec lateX, si ', styleFmt("type == \"div\"", "codecommand"), ' est défini, la commande utilisera une ouverture du format avec ', styleFmt("begin", "codecommand"), ' et une fermeture avec ', styleFmt("end", "codecommand"), '.  
+- ', styleFmt("beginVerbatim", "codecommand"), ' et ', styleFmt("endVerbatim", "codecommand"), ' sont spécifiques au format "verbatim". Ces fonctions permettent d\'encadrer une zone de code avec une couleur de fond, ce qui n\'est pas implémenté par défaut avec lateX notamment.',
 sep = "")
 ```
 ```{r R-functions, echo=TRUE, purl=FALSE}
@@ -162,7 +200,7 @@ beginStyleFmt <- function(textstyle, type = "span") {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {
     if (type == "div") {
-      cat("\\begin{", textstyle, "}", sep = "")
+      cat("\\begin{", textstyle, "}\n", sep = "")
     } else {
       paste0("\\", textstyle, "{")
     }
@@ -180,7 +218,7 @@ endStyleFmt <- function(textstyle, type = "span") {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {
     if (type == "div") {
-      cat("\\end{", textstyle, "}", sep = "")
+      cat("\n\\end{", textstyle, "}", sep = "")
     } else {
       paste0("}")
     }
@@ -474,14 +512,14 @@ sep = "")
 ```{r TwoImagesEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
 cat(
 '# Two images side-by-side and centered
-A problem while using two images side by side using ', styleFmt("knitr::include_graphics", "codecommand"), ' in the same chunk is that option ', styleFmt("fig.align = 'center'", "codecommand"), ' applies separately to the two images, so that there are one under the other, in two different paragraphs:'
+A problem while using two images side by side using ', beginStyleFmt("codecommand"), '"knitr::include\\_graphics"', endStyleFmt("codecommand"), ' in the same chunk is that option ', styleFmt("fig.align = 'center'", "codecommand"), ' applies separately to the two images, so that there are one under the other, in two different paragraphs:'
 )
 ```
 <!-- french -->
 ```{r TwoImagesFR, echo=FALSE, eval=(lang == "FR"), results='asis'}
 cat(
 '# Deux images côte-à-côte et centrées sur la page
-Le problème lorsqu\'on veut afficher deux images côte-à-côte avec ', styleFmt("knitr::include_graphics", "codecommand"), ' à partir d\'un même "chunk", c\'est que l\'option', styleFmt("fig.align = 'center'", "codecommand"), ' s\'applique séparément aux deux images, ce qui les fait apparaître l\'une sous l\'autre, dans deux paragraphes séparés:'
+Le problème lorsqu\'on veut afficher deux images côte-à-côte avec ', beginStyleFmt("codecommand"), '"knitr::include\\_graphics"', endStyleFmt("codecommand"), ' à partir d\'un même "chunk", c\'est que l\'option', styleFmt("fig.align = 'center'", "codecommand"), ' s\'applique séparément aux deux images, ce qui les fait apparaître l\'une sous l\'autre, dans deux paragraphes séparés:'
 )
 ```
 
@@ -626,9 +664,10 @@ plot(...)
 ```{r TryItEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
 cat(
 '# Try this script !
-All files necessary to produce this page are available on my github. All outputs in french and english, in pdf and html, as well as student and teacher R-script are also in the repository. Use the ', beginStyleFmt("advert"), '"Run\\_all\\_and\\_choose\\_options.R"', endStyleFmt("advert"), ' file to produce them on your own.  
+All files necessary to produce this page are available on [my github](https://github.com/statnmap/Rmarkdown_tips). All outputs in french and english, in pdf and html, as well as student and teacher R-script are also in the repository. Use the ', beginStyleFmt("advert"), '"Run\\_all\\_and\\_choose\\_options.R"', endStyleFmt("advert"), ' file to produce them on your own.  
 
 ## Some limits
+A limit to the use of "\\begin" and "\\end" environment with lateX is that pandoc do not convert markdown syntax included in that environment. It is read as verbatim. Maybe, I\'ll find a way to get rid of that.  
 One of the drawback of this kind of multilingual rmarkdown script is that code highlighting is messy in Rstudio... This specific one in very messy because I wanted to show you the complete chunks in the output file, but it is quite difficult to do it in a clean way as "asis" chunks do not allow for "echo" and "verbatim" options.
 If you have any better way to do it, you can comment here or in the github repository itself.  
 **By the way, if your file starts to be too big like the present one, do not hesitate to work with child Rmd files.**
@@ -646,17 +685,19 @@ More tips on [R, models and spatial things on my website](https://statnmap.com/e
 
 ***
 
-_Because my website uses two languages with q-translateX plugin in wordpress, I cheated a little with the images included in this page. However, the full html page produced by rstudio is visible here: [https://statnmap.com/](https://statnmap.com/)_',
+_This page is presented [here on my website](https://statnmap.com/2017/03/rmarkdown-conditional-chunks-to-create-multilingual-pdf-and-html-with-images/)_  
+[![](./myfigdirectory/Logo_EN_small.png)](https://statnmap.com/en/)',
 sep = "")
 ```
 <!-- french -->
 ```{r TryItFR, echo=FALSE, eval=(lang == "FR"), results='asis'}
 cat(
 '# Essayez vous-même ce script !
-Tous les fichiers nécessaire à la création de cette page son disponibles sur mon github. Toutes les sorties en français et en anglais, en pdf et en html, ainsi que les scripts R formateur et participants sont aussi dans le dossier. Utilisez le fichier ', beginStyleFmt("advert"), '"Run\\_all\\_and\\_choose\\_options.R"', endStyleFmt("advert"), ' pour reproduire tous les fichiers par vous-même.    
+Tous les fichiers nécessaire à la création de cette page son disponibles sur [mon github](https://github.com/statnmap/Rmarkdown_tips). Toutes les sorties en français et en anglais, en pdf et en html, ainsi que les scripts R formateur et participants sont aussi dans le dossier. Utilisez le fichier ', beginStyleFmt("advert"), '"Run\\_all\\_and\\_choose\\_options.R"', endStyleFmt("advert"), ' pour reproduire tous les fichiers par vous-même.    
 
 ## Quelques limites
-Une des limites de ce type de script multilingue rmarkdown, est que la coloration syntaxique dans Rstudio n\'est plus très utile... Le script utilisé pour générer cette page peut être difficile à lire, en particulier parce que j\'ai voulu vous afficher les "chunks" utilisés en entier. De plus, les chunks "asis" ne permettent pas d\'utiliser l\'option "verbatim", ce qui m\'a obligé à ajouter une couche de code ici.  
+Une limite à l\'utilisation des balises "\\begin" et "\\end" avec lateX est que pandoc ne convertit pas la syntaxe markdown inclue dans cet environnement. Elle est considérée comme du code verbatim. Peut-être que je trouverai un moyen de passer outre...
+Par ailleurs, une des limites de ce type de script multilingue rmarkdown, est que la coloration syntaxique dans Rstudio n\'est plus très utile... Le script utilisé pour générer cette page peut être difficile à lire, en particulier parce que j\'ai voulu vous afficher les "chunks" utilisés en entier. De plus, les chunks "asis" ne permettent pas d\'utiliser l\'option "verbatim", ce qui m\'a obligé à ajouter une couche de code ici.  
 Si vous avez des meilleures manières de produire le code de cette page, vous pouvez apporter vos commentaires ici ou sur github.  
 **Cela dit, si vos fichiers rmarkdown commencent à être trop volumineux, n\'hésitez pas à créer des fichiers enfants...**
 
@@ -672,6 +713,7 @@ Toutefois, vous pourrez rencontrer quelques messages d\'erreur dûs à des incom
 Plus d\'astuces en lien avec [R, les modèles et les trucs spatialisés sur mon site Internet](https://statnmap.com/)
 
 ***
-_Because my website uses two languages with q-translateX plugin in wordpress, I cheated a little with the images included in this page. However, the full html page produced by rstudio is visible here: (https://statnmap.com/)_',
+_Cette page est présentée [ici sur mon site Internet](https://statnmap.com/2017/03/rmarkdown-conditional-chunks-to-create-multilingual-pdf-and-html-with-images/)_  
+[![](./myfigdirectory/Logo_FR_small.png)](https://statnmap.com/)',
 sep = "")
 ```

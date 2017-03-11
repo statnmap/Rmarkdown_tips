@@ -1,0 +1,17 @@
+---
+title: "Knit include_graphics with echo"
+author: "StatnMap"
+date: "11 mars 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r IncludeGraphics, echo = TRUE, out.width="50%"}
+knitr::include_graphics("./myfigdirectory/fr.png")
+knitr::include_graphics("./myfigdirectory/en.png")
+```
+

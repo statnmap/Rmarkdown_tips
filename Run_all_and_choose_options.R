@@ -25,16 +25,14 @@ if (output == "knit") {
     filename <- paste0("Rmd_tips_", lang, ".html")
     rmarkdown::render(
       "Rmd_tips.Rmd", output_format = "html_document",
-      output_file = filename)
+      output_file = filename,
+      output_options = list(self_contained = TRUE))
     system(paste("firefox", filename, "&"))
-    if (file.exists("Rmd_tips_EN.md")) {
-      file.rename(from = "Rmd_tips_EN.md", to = "README.md")   
-    }
   } else if (render == "pdf") {
     filename <- paste0("Rmd_tips_", lang, ".pdf")
     rmarkdown::render(
       "Rmd_tips.Rmd", output_format = "bookdown::pdf_document2",
-      output_file = filename, clean = FALSE)
+      output_file = filename)
     system(paste("evince", filename, "&"))
   }
 }
