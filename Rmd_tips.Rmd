@@ -104,7 +104,7 @@ cat(
 '# Knit with multiple rendering options
 I want to be able to knit my rmarkdown documents in different speaking language (english and french). I also want them to give similar rendering in html and in latex pdf so that I can use them in my courses as html version on the laptop, but also as printed version through the latex pdf. By the way, I also have a teacher and a student version for the R-scripts that I can purl from the Rmd file.  
 This means many options for a **unique** rmarkdown document. Using a unique document allow me to directly modify things for the different versions at the same place. I do not have to jump from a file to another and verify that I copied every modification in the R-script or other...  
-I personnaly use an external _"run-all"_ R-script to choose options to run the different versions and rename output files.
+I personally use an external _"run-all"_ R-script to choose options to run the different versions and rename output files.
 
 ## A non exhaustive list
 In this article, I list some of the tips I have to use to make this work and some bonus:
@@ -346,7 +346,7 @@ Dans les \`chunks\` au format \'asis\', avec l\'option ', styleFmt("echo=TRUE", 
 sep = "")
 ```
 
-```{r R-AsisChunk, echo=FALSE, eval=(lang == "EN"), results='asis'}
+```{r R-AsisChunk, echo=FALSE, results='asis'}
 beginVerbatim()
 cat(
 '  <!-- english -->
@@ -383,6 +383,52 @@ Le "chunk" ci-dessus permet d'utiliser la syntaxe markdown
 
 ### Et les titres en milieu de "chunk" s'il y a une ligne vide avant
 Et vous pouvez utiliser le texte normal, _italic_ ou **autre**
+```
+
+<!-- Conditional title -->
+`r if (lang == "EN") {"## Include R outputs in conditional chunk"} else if (lang == "FR") {"## Inclure des sorties R dans les \"chunks\" conditionnels"}`
+
+<!-- english -->
+```{r CodeInChunkEN, echo=(lang == "EN"), eval=(lang == "EN"), results='asis', verbatim=TRUE}
+cat(
+'### Example of title in a chunk
+#### Example of subtitle in a chunk
+- ', styleFmt("cat", "codecommand"), ' should be used with ',
+styleFmt("sep = \"\"", "codecommand"), ' otherwise a space will be added 
+before "##subtitle", which avoid it to be recognised as a subtitle in markdown.
+- ', styleFmt("eval", "codecommand"), ' can be used with R object to knit 
+chunk specific to language. Here ', styleFmt("lang", "codecommand"), 
+' is ', lang,  '\n',
+'- Double space should work to define new paragraph, but when using R
+functions, it may require "\\\\n" 
+_(Note the number of backslash in the code here to print "\\\\n" correctly...)_.
+    + ', styleFmt("For instance when using the format function,
+                  following two spaces won\'t work:", "advert"), '  ',
+'    + This sentence won\'t be on a new line.',
+sep = "")
+```
+<!-- french -->
+```{r CodeInChunkFR, echo=(lang == "FR"), eval=(lang == "FR"), results='asis', verbatim=TRUE}
+cat(
+'### Exemple de titre dans un "chunk"
+#### Exemple de sous-titre dans un "chunk"
+- ', styleFmt("cat", "codecommand"), ' doit être utilisé avec l\'option ',
+styleFmt("sep = \"\"", "codecommand"), ' sinon un espace sera ajouté
+devant les dièses des "## sous-titres", ce qui empêche markdown de les
+reconnaître comme tel.
+- ', styleFmt("eval", "codecommand"), ' peut être utilisé avec un objet R
+pour spécifier si le texte doit être affiché, selon le choix de la langue.
+Ici here ', styleFmt("lang", "codecommand"), ' est défini comme ', lang,  '\n',
+'- Les doubles espaces fonctionnent normalement pour produire un nouveau 
+paragraphe, mais lorsqu\'on utilise une fonction R dans le code, il faut
+parfois utiliser "\\\\n".
+_(Notez le nombre de backslash que j\'ai dû utiliser pour afficher "\\\\n"
+correctement...)_.
+    + ', styleFmt("Par exemple, si j\'utilise ma fonction de formatage,
+                  les espaces suivants ne fonctionnent pas:", "advert"),
+'  ',
+'    + Cette phrase ne sera pas sur une nouvelle ligne.',
+sep = "")
 ```
 
 <!-- english -->
@@ -461,52 +507,6 @@ sep = "")
 endVerbatim()
 ```
 - `r if (lang == "EN") {knitr::include_graphics(paste0(figWD, '/gb.png'), dpi = 400)} else if (lang == "FR") {knitr::include_graphics(paste0(figWD, '/fr.png'), dpi = 400)}` `r if (lang == "EN") {"Conditionnal image: English flag shown if 'lang' is 'EN'"} else if (lang == "FR") {"Image avec condition : Le drapeau français est affiché si 'lang' est 'FR'"}`
-
-<!-- Conditional title -->
-`r if (lang == "EN") {"## Include R outputs in conditional chunk"} else if (lang == "FR") {"## Inclure des sorties R dans les \"chunks\" conditionnels"}`
-
-<!-- english -->
-```{r CodeInChunkEN, echo=(lang == "EN"), eval=(lang == "EN"), results='asis', verbatim=TRUE}
-cat(
-'### Example of title in a chunk
-#### Example of subtitle in a chunk
-- ', styleFmt("cat", "codecommand"), ' should be used with ',
-styleFmt("sep = \"\"", "codecommand"), ' otherwise a space will be added 
-before "##subtitle", which avoid it to be recognised as a subtitle in markdown.
-- ', styleFmt("eval", "codecommand"), ' can be used with R object to knit 
-chunk specific to language. Here ', styleFmt("lang", "codecommand"), 
-' is ', lang,  '\n',
-'- Double space should work to define new paragraph, but when using R
-functions, it may require "\\\\n" 
-_(Note the number of backslash in the code here to print "\\\\n" correctly...)_.
-    + ', styleFmt("For instance when using the format function,
-                  following two spaces won\'t work:", "advert"), '  ',
-'    + This sentence won\'t be on a new line.',
-sep = "")
-```
-<!-- french -->
-```{r CodeInChunkFR, echo=(lang == "FR"), eval=(lang == "FR"), results='asis', verbatim=TRUE}
-cat(
-'### Exemple de titre dans un "chunk"
-#### Exemple de sous-titre dans un "chunk"
-- ', styleFmt("cat", "codecommand"), ' doit être utilisé avec l\'option ',
-styleFmt("sep = \"\"", "codecommand"), ' sinon un espace sera ajouté
-devant les dièses des "## sous-titres", ce qui empêche markdown de les
-reconnaître comme tel.
-- ', styleFmt("eval", "codecommand"), ' peut être utilisé avec un objet R
-pour spécifier si le texte doit être affiché, selon le choix de la langue.
-Ici here ', styleFmt("lang", "codecommand"), ' est défini comme ', lang,  '\n',
-'- Les doubles espaces fonctionnent normalement pour produire un nouveau 
-paragraphe, mais lorsqu\'on utilise une fonction R dans le code, il faut
-parfois utiliser "\\\\n".
-_(Notez le nombre de backslash que j\'ai dû utiliser pour afficher "\\\\n"
-correctement...)_.
-    + ', styleFmt("Par exemple, si j\'utilise ma fonction de formatage,
-                  les espaces suivants ne fonctionnent pas:", "advert"),
-'  ',
-'    + Cette phrase ne sera pas sur une nouvelle ligne.',
-sep = "")
-```
 
 <!-- english -->
 ```{r TwoImagesEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
@@ -592,7 +592,7 @@ endCentering()
 cat(
 '# Student and teacher versions
 ## Create the tutorial roadmap
-This one is pretty easy. You only have to set your ', styleFmt("purl", "codecommand"), ' option depending if your chunk is for student or teacher. I personnally use ', styleFmt("eval=TRUE", "codecommand"), ' with the teacher version that should produce the result targeted by students. And I use ', styleFmt("eval=FALSE", "codecommand"), ' with the student version because this version should not work.
+This one is pretty easy. You only have to set your ', styleFmt("purl", "codecommand"), ' option depending if your chunk is for student or teacher. I personally use ', styleFmt("eval=TRUE", "codecommand"), ' with the teacher version that should produce the result targeted by students. And I use ', styleFmt("eval=FALSE", "codecommand"), ' with the student version because this version should not work.
 
 ### Exercise example
 Reproduce the following figure from the "cars" dataset.',

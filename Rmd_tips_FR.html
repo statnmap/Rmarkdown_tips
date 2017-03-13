@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Rmarkdown avec conditions pour créer des pdf et html en différentes langues et avec des images</h1>
 <h4 class="author"><em>Sébastien Rochette - StatnMap</em></h4>
-<h4 class="date"><em>11 mars, 2017</em></h4>
+<h4 class="date"><em>13 mars, 2017</em></h4>
 
 </div>
 
@@ -134,12 +134,12 @@ $(document).ready(function () {
 <li><a href="#pour-les-titres-et-sous-titres-au-debut-du-chunk"><span class="toc-section-number">2.1.1</span> Pour les titres et sous-titres au début du “chunk”</a></li>
 <li><a href="#et-les-titres-en-milieu-de-chunk-sil-y-a-une-ligne-vide-avant"><span class="toc-section-number">2.1.2</span> Et les titres en milieu de “chunk” s’il y a une ligne vide avant</a></li>
 </ul></li>
-<li><a href="#images-et-chemins-sous-conditions"><span class="toc-section-number">2.2</span> Images et chemins sous conditions</a><ul>
-<li><a href="#quand-vos-images-sont-dans-un-dossier-defini-et-saffichent-dans-un-paragraphe-different-du-texte"><span class="toc-section-number">2.2.1</span> Quand vos images sont dans un dossier défini et s’affichent dans un paragraphe différent du texte</a></li>
-<li><a href="#quand-vos-images-sont-dans-un-dossier-avec-condition-de-langue-et-sont-affichees-en-ligne-dans-le-texte"><span class="toc-section-number">2.2.2</span> Quand vos images sont dans un dossier avec condition de langue et sont affichées en ligne dans le texte</a></li>
+<li><a href="#inclure-des-sorties-r-dans-les-chunks-conditionnels"><span class="toc-section-number">2.2</span> Inclure des sorties R dans les “chunks” conditionnels</a><ul>
+<li><a href="#exemple-de-titre-dans-un-chunk"><span class="toc-section-number">2.2.1</span> Exemple de titre dans un “chunk”</a></li>
 </ul></li>
-<li><a href="#inclure-des-sorties-r-dans-les-chunks-conditionnels"><span class="toc-section-number">2.3</span> Inclure des sorties R dans les “chunks” conditionnels</a><ul>
-<li><a href="#exemple-de-titre-dans-un-chunk"><span class="toc-section-number">2.3.1</span> Exemple de titre dans un “chunk”</a></li>
+<li><a href="#images-et-chemins-sous-conditions"><span class="toc-section-number">2.3</span> Images et chemins sous conditions</a><ul>
+<li><a href="#quand-vos-images-sont-dans-un-dossier-defini-et-saffichent-dans-un-paragraphe-different-du-texte"><span class="toc-section-number">2.3.1</span> Quand vos images sont dans un dossier défini et s’affichent dans un paragraphe différent du texte</a></li>
+<li><a href="#quand-vos-images-sont-dans-un-dossier-avec-condition-de-langue-et-sont-affichees-en-ligne-dans-le-texte"><span class="toc-section-number">2.3.2</span> Quand vos images sont dans un dossier avec condition de langue et sont affichées en ligne dans le texte</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#deux-images-cote-a-cote-et-centrees-sur-la-page"><span class="toc-section-number">3</span> Deux images côte-à-côte et centrées sur la page</a></li>
@@ -333,6 +333,24 @@ endVerbatim &lt;- function() {
 <div id="inclure-du-texte-dans-des-chunks-au-format-asis" class="section level2">
 <h2><span class="header-section-number">2.1</span> Inclure du texte dans des <code>chunks</code> au format ‘asis’</h2>
 <p>Dans les <code>chunks</code> au format ‘asis’, avec l’option <span class="codecommand">echo=TRUE</span>, il est possible d’écrire votre texte en utilisant la syntaxe rmarkdown. Cela produit (partiellement) le format correct comme si vous n’étiez pas dans un chunk. L’intérêt ici étant de pouvoir utiliser la commande <span class="codecommand">eval</span> pour afficher ou non le texte selon la langue désirée.</p>
+<div class="blueShaded">
+<pre><code>  &lt;!-- english --&gt;
+  ```{asis, eval=(lang == &quot;EN&quot;), echo=TRUE}
+  ### For titles and subtitles when at the beginning
+  This above chunk allow for markdown syntax  
+  
+  ### And for titles in the middle if there is space line above
+  And you can use it for normal text or _italic_ or **other**
+  ```
+  &lt;!-- french --&gt;
+  ```{asis, eval=(lang == &quot;FR&quot;), echo=TRUE}
+  ### Pour les titres et sous-titres au début du &quot;chunk&quot;
+  Le &quot;chunk&quot; ci-dessus permet d'utiliser la syntaxe markdown
+  
+  ### Et les titres en milieu de &quot;chunk&quot; s'il y a une ligne vide avant
+  Et vous pouvez utiliser le texte normal, _italic_ ou **autre**
+  ```</code></pre>
+</div>
 <!-- english -->
 <!-- french -->
 <div id="pour-les-titres-et-sous-titres-au-debut-du-chunk" class="section level3">
@@ -342,55 +360,11 @@ endVerbatim &lt;- function() {
 <div id="et-les-titres-en-milieu-de-chunk-sil-y-a-une-ligne-vide-avant" class="section level3">
 <h3><span class="header-section-number">2.1.2</span> Et les titres en milieu de “chunk” s’il y a une ligne vide avant</h3>
 <p>Et vous pouvez utiliser le texte normal, <em>italic</em> ou <strong>autre</strong></p>
-<!-- english -->
-<!-- french -->
-</div>
-</div>
-<div id="images-et-chemins-sous-conditions" class="section level2">
-<h2><span class="header-section-number">2.2</span> Images et chemins sous conditions</h2>
-<div id="quand-vos-images-sont-dans-un-dossier-defini-et-saffichent-dans-un-paragraphe-different-du-texte" class="section level3">
-<h3><span class="header-section-number">2.2.1</span> Quand vos images sont dans un dossier défini et s’affichent dans un paragraphe différent du texte</h3>
-<div class="blueShaded">
-<pre><code>  ```{asis, eval=(lang == &quot;EN&quot;)}
-  ![](./myfigdirectory/gb.png) Directory for english version
-  ```
-  ```{asis, eval=(lang == &quot;FR&quot;)}
-  ![](./myfigdirectory/fr.png) Fichier pour la version française
-  ```</code></pre>
-</div>
-<!-- english -->
-<!-- french -->
-</div>
-<div id="quand-vos-images-sont-dans-un-dossier-avec-condition-de-langue-et-sont-affichees-en-ligne-dans-le-texte" class="section level3">
-<h3><span class="header-section-number">2.2.2</span> Quand vos images sont dans un dossier avec condition de langue et sont affichées en ligne dans le texte</h3>
-<p>Seul le code du dernier point est affiché ici mais vous pourrez retrouver le code des autres dans le fichier original rmarkdown qui a servi à créer cette page.</p>
-<pre class="r"><code>figWD &lt;- paste0(&quot;./myfigdirectory&quot;, lang)</code></pre>
-<ul>
-<li><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAD1BMVEUAI5Wqttz////5ub7tKTkCNwK+AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtC2BlAPkAAAAsSURBVEjH7csxDQAwDAOwqFCmQRl/TH2nYLB/J2VOua9EURRFURRFURRF+SxxZbUiYEKYmgAAAABJRU5ErkJggg==" /> Image sans condition</li>
-<li><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAD1BMVEUAI5Wqttz////5ub7tKTkCNwK+AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtC2BlAPkAAAAsSURBVEjH7csxDQAwDAOwqFCmQRl/TH2nYLB/J2VOua9EURRFURRFURRF+SxxZbUiYEKYmgAAAABJRU5ErkJggg==" width="24" /> Pas de condition mais permet de changer la taille de l’image (si <span class="codecommand">out.width</span> ne fait pas partie des options générales de knitr définie au début de votre script).</li>
-</ul>
-<div class="blueShaded">
-<pre><code>  - `r 
-    if (lang == &quot;EN&quot;) {
-      knitr::include_graphics(paste0(figWD, '/gb.png'), dpi = 400)
-    } else if (lang == &quot;FR&quot;) {
-      knitr::include_graphics(paste0(figWD, '/fr.png'), dpi = 400)
-    }`
-    `r 
-    if (lang == &quot;EN&quot;) {
-      &quot;Conditionnal image: English flag shown if 'lang' is 'EN'&quot;
-    } else if (lang == &quot;FR&quot;) {
-      &quot;Image avec condition : Le drapeau français est affiché si 'lang' est 'FR'&quot;
-    }`</code></pre>
-</div>
-<ul>
-<li><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAD1BMVEUAI5Wqttz////5ub7tKTkCNwK+AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtC2BlAPkAAAAsSURBVEjH7csxDQAwDAOwqFCmQRl/TH2nYLB/J2VOua9EURRFURRFURRF+SxxZbUiYEKYmgAAAABJRU5ErkJggg==" width="24" /> Image avec condition : Le drapeau français est affiché si ‘lang’ est ‘FR’</li>
-</ul>
 <!-- Conditional title -->
 </div>
 </div>
 <div id="inclure-des-sorties-r-dans-les-chunks-conditionnels" class="section level2">
-<h2><span class="header-section-number">2.3</span> Inclure des sorties R dans les “chunks” conditionnels</h2>
+<h2><span class="header-section-number">2.2</span> Inclure des sorties R dans les “chunks” conditionnels</h2>
 <!-- english -->
 <!-- french -->
 <div class="blueShaded">
@@ -418,9 +392,9 @@ endVerbatim &lt;- function() {
     ```</code></pre>
 </div>
 <div id="exemple-de-titre-dans-un-chunk" class="section level3">
-<h3><span class="header-section-number">2.3.1</span> Exemple de titre dans un “chunk”</h3>
+<h3><span class="header-section-number">2.2.1</span> Exemple de titre dans un “chunk”</h3>
 <div id="exemple-de-sous-titre-dans-un-chunk" class="section level4">
-<h4><span class="header-section-number">2.3.1.1</span> Exemple de sous-titre dans un “chunk”</h4>
+<h4><span class="header-section-number">2.2.1.1</span> Exemple de sous-titre dans un “chunk”</h4>
 <ul>
 <li><span class="codecommand">cat</span> doit être utilisé avec l’option <span class="codecommand">sep = “”</span> sinon un espace sera ajouté devant les dièses des “## sous-titres”, ce qui empêche markdown de les reconnaître comme tel.</li>
 <li><span class="codecommand">eval</span> peut être utilisé avec un objet R pour spécifier si le texte doit être affiché, selon le choix de la langue. Ici here <span class="codecommand">lang</span> est défini comme FR</li>
@@ -432,6 +406,50 @@ endVerbatim &lt;- function() {
 <!-- english -->
 <!-- french -->
 </div>
+</div>
+</div>
+<div id="images-et-chemins-sous-conditions" class="section level2">
+<h2><span class="header-section-number">2.3</span> Images et chemins sous conditions</h2>
+<div id="quand-vos-images-sont-dans-un-dossier-defini-et-saffichent-dans-un-paragraphe-different-du-texte" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Quand vos images sont dans un dossier défini et s’affichent dans un paragraphe différent du texte</h3>
+<div class="blueShaded">
+<pre><code>  ```{asis, eval=(lang == &quot;EN&quot;)}
+  ![](./myfigdirectory/gb.png) Directory for english version
+  ```
+  ```{asis, eval=(lang == &quot;FR&quot;)}
+  ![](./myfigdirectory/fr.png) Fichier pour la version française
+  ```</code></pre>
+</div>
+<!-- english -->
+<!-- french -->
+</div>
+<div id="quand-vos-images-sont-dans-un-dossier-avec-condition-de-langue-et-sont-affichees-en-ligne-dans-le-texte" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Quand vos images sont dans un dossier avec condition de langue et sont affichées en ligne dans le texte</h3>
+<p>Seul le code du dernier point est affiché ici mais vous pourrez retrouver le code des autres dans le fichier original rmarkdown qui a servi à créer cette page.</p>
+<pre class="r"><code>figWD &lt;- paste0(&quot;./myfigdirectory&quot;, lang)</code></pre>
+<ul>
+<li><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAD1BMVEUAI5Wqttz////5ub7tKTkCNwK+AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtC2BlAPkAAAAsSURBVEjH7csxDQAwDAOwqFCmQRl/TH2nYLB/J2VOua9EURRFURRFURRF+SxxZbUiYEKYmgAAAABJRU5ErkJggg==" /> Image sans condition</li>
+<li><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAD1BMVEUAI5Wqttz////5ub7tKTkCNwK+AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtC2BlAPkAAAAsSURBVEjH7csxDQAwDAOwqFCmQRl/TH2nYLB/J2VOua9EURRFURRFURRF+SxxZbUiYEKYmgAAAABJRU5ErkJggg==" width="24" /> Pas de condition mais permet de changer la taille de l’image (si <span class="codecommand">out.width</span> ne fait pas partie des options générales de knitr définie au début de votre script).</li>
+</ul>
+<div class="blueShaded">
+<pre><code>  - `r 
+    if (lang == &quot;EN&quot;) {
+      knitr::include_graphics(paste0(figWD, '/gb.png'), dpi = 400)
+    } else if (lang == &quot;FR&quot;) {
+      knitr::include_graphics(paste0(figWD, '/fr.png'), dpi = 400)
+    }`
+    `r 
+    if (lang == &quot;EN&quot;) {
+      &quot;Conditionnal image: English flag shown if 'lang' is 'EN'&quot;
+    } else if (lang == &quot;FR&quot;) {
+      &quot;Image avec condition : Le drapeau français est affiché si 'lang' est 'FR'&quot;
+    }`</code></pre>
+</div>
+<ul>
+<li><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAD1BMVEUAI5Wqttz////5ub7tKTkCNwK+AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtC2BlAPkAAAAsSURBVEjH7csxDQAwDAOwqFCmQRl/TH2nYLB/J2VOua9EURRFURRFURRF+SxxZbUiYEKYmgAAAABJRU5ErkJggg==" width="24" /> Image avec condition : Le drapeau français est affiché si ‘lang’ est ‘FR’</li>
+</ul>
+<!-- english -->
+<!-- french -->
 </div>
 </div>
 </div>

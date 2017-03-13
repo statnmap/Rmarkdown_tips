@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Rmarkdown conditional chunks to create multilingual pdf and html with images</h1>
 <h4 class="author"><em>Sébastien Rochette - StatnMap</em></h4>
-<h4 class="date"><em>11 mars, 2017</em></h4>
+<h4 class="date"><em>13 mars, 2017</em></h4>
 
 </div>
 
@@ -134,12 +134,12 @@ $(document).ready(function () {
 <li><a href="#for-titles-and-subtitles-when-at-the-beginning"><span class="toc-section-number">2.1.1</span> For titles and subtitles when at the beginning</a></li>
 <li><a href="#and-for-titles-in-the-middle-if-there-is-space-line-above"><span class="toc-section-number">2.1.2</span> And for titles in the middle if there is space line above</a></li>
 </ul></li>
-<li><a href="#conditional-images-and-path"><span class="toc-section-number">2.2</span> Conditional images and path</a><ul>
-<li><a href="#when-images-are-in-a-defined-directory-and-are-shown-in-paragraph-different-that-text"><span class="toc-section-number">2.2.1</span> When images are in a defined directory and are shown in paragraph different that text</a></li>
-<li><a href="#when-images-are-in-a-changing-directory-and-are-shown-inline"><span class="toc-section-number">2.2.2</span> When images are in a changing directory and are shown inline</a></li>
+<li><a href="#include-r-outputs-in-conditional-chunk"><span class="toc-section-number">2.2</span> Include R outputs in conditional chunk</a><ul>
+<li><a href="#example-of-title-in-a-chunk"><span class="toc-section-number">2.2.1</span> Example of title in a chunk</a></li>
 </ul></li>
-<li><a href="#include-r-outputs-in-conditional-chunk"><span class="toc-section-number">2.3</span> Include R outputs in conditional chunk</a><ul>
-<li><a href="#example-of-title-in-a-chunk"><span class="toc-section-number">2.3.1</span> Example of title in a chunk</a></li>
+<li><a href="#conditional-images-and-path"><span class="toc-section-number">2.3</span> Conditional images and path</a><ul>
+<li><a href="#when-images-are-in-a-defined-directory-and-are-shown-in-paragraph-different-that-text"><span class="toc-section-number">2.3.1</span> When images are in a defined directory and are shown in paragraph different that text</a></li>
+<li><a href="#when-images-are-in-a-changing-directory-and-are-shown-inline"><span class="toc-section-number">2.3.2</span> When images are in a changing directory and are shown inline</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#two-images-side-by-side-and-centered"><span class="toc-section-number">3</span> Two images side-by-side and centered</a></li>
@@ -173,7 +173,7 @@ Go back on my website:<br />
 <h1><span class="header-section-number">1</span> Knit with multiple rendering options</h1>
 <p>I want to be able to knit my rmarkdown documents in different speaking language (english and french). I also want them to give similar rendering in html and in latex pdf so that I can use them in my courses as html version on the laptop, but also as printed version through the latex pdf. By the way, I also have a teacher and a student version for the R-scripts that I can purl from the Rmd file.<br />
 This means many options for a <strong>unique</strong> rmarkdown document. Using a unique document allow me to directly modify things for the different versions at the same place. I do not have to jump from a file to another and verify that I copied every modification in the R-script or other…<br />
-I personnaly use an external <em>“run-all”</em> R-script to choose options to run the different versions and rename output files.</p>
+I personally use an external <em>“run-all”</em> R-script to choose options to run the different versions and rename output files.</p>
 <div id="a-non-exhaustive-list" class="section level2">
 <h2><span class="header-section-number">1.1</span> A non exhaustive list</h2>
 <p>In this article, I list some of the tips I have to use to make this work and some bonus:</p>
@@ -352,13 +352,52 @@ endVerbatim &lt;- function() {
 <div id="and-for-titles-in-the-middle-if-there-is-space-line-above" class="section level3">
 <h3><span class="header-section-number">2.1.2</span> And for titles in the middle if there is space line above</h3>
 <p>And you can use it for normal text or <em>italic</em> or <strong>other</strong> <!-- french --></p>
+<!-- Conditional title -->
+</div>
+</div>
+<div id="include-r-outputs-in-conditional-chunk" class="section level2">
+<h2><span class="header-section-number">2.2</span> Include R outputs in conditional chunk</h2>
+<!-- english -->
+<div class="blueShaded">
+<pre><code>    ```{r CodeInChunkEN, echo=(lang == &quot;EN&quot;), eval=(lang == &quot;EN&quot;), results='asis'}
+    cat(
+    '### Example of title in a chunk
+    #### Example of subtitle in a chunk
+    - ', styleFmt(&quot;cat&quot;, &quot;codecommand&quot;), ' should be used with ',
+    styleFmt(&quot;sep = \&quot;\&quot;&quot;, &quot;codecommand&quot;), ' otherwise a space will be added 
+    before &quot;##subtitle&quot;, which avoid it to be recognised as a subtitle in markdown.
+    - ', styleFmt(&quot;eval&quot;, &quot;codecommand&quot;), ' can be used with R object to knit 
+    chunk specific to language. Here ', styleFmt(&quot;lang&quot;, &quot;codecommand&quot;), 
+    ' is ', lang,  '\n',
+    '- Double space should work to define new paragraph, but when using R
+    functions, it may require &quot;\\\\n&quot; 
+    _(Note the number of backslash in the code here to print &quot;\\\\n&quot; correctly...)_.
+        + ', styleFmt(&quot;For instance when using the format function,
+                      following two spaces won\'t work:&quot;, &quot;advert&quot;), '  ',
+    '    + This sentence won\'t be on a new line.',
+    sep = &quot;&quot;)
+    ```</code></pre>
+</div>
+<div id="example-of-title-in-a-chunk" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Example of title in a chunk</h3>
+<div id="example-of-subtitle-in-a-chunk" class="section level4">
+<h4><span class="header-section-number">2.2.1.1</span> Example of subtitle in a chunk</h4>
+<ul>
+<li><span class="codecommand">cat</span> should be used with <span class="codecommand">sep = “”</span> otherwise a space will be added before “##subtitle”, which avoid it to be recognised as a subtitle in markdown.</li>
+<li><span class="codecommand">eval</span> can be used with R object to knit chunk specific to language. Here <span class="codecommand">lang</span> is EN</li>
+<li>Double space should work to define new paragraph, but when using R functions, it may require “\n” <em>(Note the number of backslash in the code here to print “\n” correctly…)</em>.
+<ul>
+<li><span class="advert">For instance when using the format function, following two spaces won’t work:</span> + This sentence won’t be on a new line. <!-- french --></li>
+</ul></li>
+</ul>
 <!-- english -->
 </div>
 </div>
+</div>
 <div id="conditional-images-and-path" class="section level2">
-<h2><span class="header-section-number">2.2</span> Conditional images and path</h2>
+<h2><span class="header-section-number">2.3</span> Conditional images and path</h2>
 <div id="when-images-are-in-a-defined-directory-and-are-shown-in-paragraph-different-that-text" class="section level3">
-<h3><span class="header-section-number">2.2.1</span> When images are in a defined directory and are shown in paragraph different that text</h3>
+<h3><span class="header-section-number">2.3.1</span> When images are in a defined directory and are shown in paragraph different that text</h3>
 <!-- french -->
 <div class="blueShaded">
 <pre><code>  ```{asis, eval=(lang == &quot;EN&quot;)}
@@ -371,7 +410,7 @@ endVerbatim &lt;- function() {
 <!-- english -->
 </div>
 <div id="when-images-are-in-a-changing-directory-and-are-shown-inline" class="section level3">
-<h3><span class="header-section-number">2.2.2</span> When images are in a changing directory and are shown inline</h3>
+<h3><span class="header-section-number">2.3.2</span> When images are in a changing directory and are shown inline</h3>
 <p>Only code of the last point is shown here, but you can find the others in the raw Rmarkdown file used to create this page. <!-- french --></p>
 <pre class="r"><code>figWD &lt;- paste0(&quot;./myfigdirectory&quot;, lang)</code></pre>
 <ul>
@@ -395,46 +434,7 @@ endVerbatim &lt;- function() {
 <ul>
 <li><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAyCAMAAACd646MAAAAe1BMVEXaSlzywMb////+/v6zvtgyT5YAJH1VbajPFCsrSZOir9D8/P3//f3vsbjWOEv+/P3tqbLWN0v9/f6rt9QtS5TM1OXByuByhrf//v70y9DkeoffYnLmhpL21dl2irn42t7ojJjjdoT0yM3cU2TVMkbsoar++/zzxcvbTl+3VBz8AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtIiLXmJUAAAFHSURBVFjD7ZjrCsIwDEY/hMkG6lOo7/+IDnXrVnM5VRCR5ddY05w2SW9RvyuyD2VU6Gch2odJV48OBNMCGZuPRVPTR47hkDVigiAMhdSIEVI8V6R7HzKMDafaoqyftgECWYa7iKzp2Zgc4llS1NgG8a0oU6CQyIJib3YMMsSRFVWMINkARafsQ3JXi3vWhpBoiueIBWF5KbqgulfIQBey6NZwlxUkz8cI4rqhghzp5qpdi9QzgfJHkP4LskE2yAb5Fci2QTZB3EOrMnzxIQsN59Byjt/KwDWeyfPnmR+/XmfzImEMBkB8NzhXIuA0UURwuUsxoojwmppglIUbXrjDFBBVTJ8OwQDFPZs+glwL4jkCnnOOFVEEfJialkQXFH5iG5EV3RoaigUvgxbd5JrKHhVGFNFYwFlhRBHNpagFRlm4PyiqzZgbj/1vMQ8MbRQAAAAASUVORK5CYII=" width="24" /> Conditionnal image: English flag shown if ‘lang’ is ‘EN’</li>
 </ul>
-<!-- Conditional title -->
-</div>
-</div>
-<div id="include-r-outputs-in-conditional-chunk" class="section level2">
-<h2><span class="header-section-number">2.3</span> Include R outputs in conditional chunk</h2>
 <!-- english -->
-<div class="blueShaded">
-<pre><code>    ```{r CodeInChunkEN, echo=(lang == &quot;EN&quot;), eval=(lang == &quot;EN&quot;), results='asis'}
-    cat(
-    '### Example of title in a chunk
-    #### Example of subtitle in a chunk
-    - ', styleFmt(&quot;cat&quot;, &quot;codecommand&quot;), ' should be used with ',
-    styleFmt(&quot;sep = \&quot;\&quot;&quot;, &quot;codecommand&quot;), ' otherwise a space will be added 
-    before &quot;##subtitle&quot;, which avoid it to be recognised as a subtitle in markdown.
-    - ', styleFmt(&quot;eval&quot;, &quot;codecommand&quot;), ' can be used with R object to knit 
-    chunk specific to language. Here ', styleFmt(&quot;lang&quot;, &quot;codecommand&quot;), 
-    ' is ', lang,  '\n',
-    '- Double space should work to define new paragraph, but when using R
-    functions, it may require &quot;\\\\n&quot; 
-    _(Note the number of backslash in the code here to print &quot;\\\\n&quot; correctly...)_.
-        + ', styleFmt(&quot;For instance when using the format function,
-                      following two spaces won\'t work:&quot;, &quot;advert&quot;), '  ',
-    '    + This sentence won\'t be on a new line.',
-    sep = &quot;&quot;)
-    ```</code></pre>
-</div>
-<div id="example-of-title-in-a-chunk" class="section level3">
-<h3><span class="header-section-number">2.3.1</span> Example of title in a chunk</h3>
-<div id="example-of-subtitle-in-a-chunk" class="section level4">
-<h4><span class="header-section-number">2.3.1.1</span> Example of subtitle in a chunk</h4>
-<ul>
-<li><span class="codecommand">cat</span> should be used with <span class="codecommand">sep = “”</span> otherwise a space will be added before “##subtitle”, which avoid it to be recognised as a subtitle in markdown.</li>
-<li><span class="codecommand">eval</span> can be used with R object to knit chunk specific to language. Here <span class="codecommand">lang</span> is EN</li>
-<li>Double space should work to define new paragraph, but when using R functions, it may require “\n” <em>(Note the number of backslash in the code here to print “\n” correctly…)</em>.
-<ul>
-<li><span class="advert">For instance when using the format function, following two spaces won’t work:</span> + This sentence won’t be on a new line. <!-- french --></li>
-</ul></li>
-</ul>
-<!-- english -->
-</div>
 </div>
 </div>
 </div>
@@ -484,7 +484,7 @@ endCentering &lt;- function() {
 <h1><span class="header-section-number">4</span> Student and teacher versions</h1>
 <div id="create-the-tutorial-roadmap" class="section level2">
 <h2><span class="header-section-number">4.1</span> Create the tutorial roadmap</h2>
-<p>This one is pretty easy. You only have to set your <span class="codecommand">purl</span> option depending if your chunk is for student or teacher. I personnally use <span class="codecommand">eval=TRUE</span> with the teacher version that should produce the result targeted by students. And I use <span class="codecommand">eval=FALSE</span> with the student version because this version should not work.</p>
+<p>This one is pretty easy. You only have to set your <span class="codecommand">purl</span> option depending if your chunk is for student or teacher. I personally use <span class="codecommand">eval=TRUE</span> with the teacher version that should produce the result targeted by students. And I use <span class="codecommand">eval=FALSE</span> with the student version because this version should not work.</p>
 <div id="exercise-example" class="section level3">
 <h3><span class="header-section-number">4.1.1</span> Exercise example</h3>
 <p>Reproduce the following figure from the “cars” dataset. <!-- french --></p>
