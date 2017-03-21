@@ -27,7 +27,7 @@
 }
 \ExplSyntaxOff
 
-% -- Define a variable depending on language -- %
+% -- Determine language selected -- %
 \newcommand{\Lang}{0}
 
 \makeatletter
@@ -54,11 +54,7 @@
 \usepackage{xcolor}
 \definecolor{blueSeb}{RGB}{30,115,190}
 \definecolor{advertcolor}{HTML}{FF8929}
-% \definecolor{blueShaded}{HTML}{D6E8F5}
-
 \definecolor{backcolor}{RGB}{235, 235, 235}
-\newcommand{\mybox}[1]{\par\noindent\colorbox{backcolor}
-  {\parbox{\dimexpr\textwidth-2\fboxsep\relax}{#1}}}
 
 \newcommand{\advert}[1]{\textit{\textcolor{advertcolor}{#1}}}
 \newcommand{\codecommand}[1]{\texttt{\colorbox{backcolor}{#1}}}
@@ -71,12 +67,14 @@
     \end{snugshade}%
 }
 
+% -- command for pandoc trick with \begin and \end -- %
+\newcommand{\nopandoc}[1]{#1} 
+
 % -- Sections format -- %
 %% Provide a definition to \subparagraph to keep titlesec happy
 \let\subparagraph\oldsubparagraph
 \let\paragraph\oldparagraph
 %% Load titlesec
-%\usepackage[compact]{titlesec}
 \usepackage{titlesec}
 %% Revert \subparagraph to the Rmd definition
 % Redefines (sub)paragraphs to behave more like sections

@@ -5,7 +5,8 @@ Version: 0.1.0
 Author: Sébastien Rochette
 Maintainer: Sébastien Rochette <sebastienrochetefr@gmail.com>
 Description: This package provides functions to be used in rmarkdown documents
-    to allow text formatting for both HTML and PDF
+    to allow text formatting for both HTML and PDF. A tutorial is here: 
+    https://statnmap.com/wp-content/uploads/rmarkdown/Rmd_tips_EN.html
 License: GPL
 Encoding: UTF-8
 LazyData: true

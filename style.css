@@ -16,3 +16,21 @@
 .blueShaded pre:not([class]) {
     background-color: #D6E8F5;
 }
+
+/* Custom specific to my website */
+body:before,
+.site-header {
+	background-color: #1e73be;
+  display: none;
+}
+body {
+  background-color: #1e73be;
+}
+    
+.main-container {
+        max-width: 1025px;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: white;
+        padding: 1em 30px 15px;
+    }
