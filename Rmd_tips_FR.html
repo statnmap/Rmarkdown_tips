@@ -67,7 +67,7 @@ h6 {
 }
 </style>
 
-<link href="data:text/css;charset=utf-8,%2Eadvert%20%7B%0Acolor%3A%20%23FF8929%3B%0Afont%2Dstyle%3A%20italic%3B%0A%7D%0A%2Ecodecommand%20%7B%0Abackground%2Dcolor%3A%20%23E0E0E0%3B%0Afont%2Dfamily%3A%20Courier%20New%2C%20Courier%2C%20monospace%3B%0A%7D%0A%2ELarge%20%7B%0Afont%2Dsize%3A%202em%3B%0A%7D%0A%2EblueShaded%20%7B%0Abackground%2Dcolor%3A%20%23D6E8F5%3B%0Afont%2Dfamily%3A%20Courier%20New%2C%20Courier%2C%20monospace%3B%0A%7D%0A%2EblueShaded%20pre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23D6E8F5%3B%0A%7D%0A" rel="stylesheet" type="text/css" />
+<link href="data:text/css;charset=utf-8,%2Eadvert%20%7B%0Acolor%3A%20%23FF8929%3B%0Afont%2Dstyle%3A%20italic%3B%0A%7D%0A%2Ecodecommand%20%7B%0Abackground%2Dcolor%3A%20%23E0E0E0%3B%0Afont%2Dfamily%3A%20Courier%20New%2C%20Courier%2C%20monospace%3B%0A%7D%0A%2ELarge%20%7B%0Afont%2Dsize%3A%202em%3B%0A%7D%0A%2EblueShaded%20%7B%0Abackground%2Dcolor%3A%20%23D6E8F5%3B%0Afont%2Dfamily%3A%20Courier%20New%2C%20Courier%2C%20monospace%3B%0A%7D%0A%2EblueShaded%20pre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23D6E8F5%3B%0A%7D%0A%0Abody%3Abefore%2C%0A%2Esite%2Dheader%20%7B%0Abackground%2Dcolor%3A%20%231e73be%3B%0Adisplay%3A%20none%3B%0A%7D%0Abody%20%7B%0Abackground%2Dcolor%3A%20%231e73be%3B%0A%7D%0A%2Emain%2Dcontainer%20%7B%0Amax%2Dwidth%3A%201025px%3B%0Amargin%2Dleft%3A%20auto%3B%0Amargin%2Dright%3A%20auto%3B%0Abackground%2Dcolor%3A%20white%3B%0Apadding%3A%201em%2030px%2015px%3B%0A%7D%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Rmarkdown avec conditions pour créer des pdf et html en différentes langues et avec des images</h1>
 <h4 class="author"><em>Sébastien Rochette - StatnMap</em></h4>
-<h4 class="date"><em>13 mars, 2017</em></h4>
+<h4 class="date"><em>21 mars, 2017</em></h4>
 
 </div>
 
@@ -233,7 +233,7 @@ beginStyleFmt &lt;- function(textstyle, type = &quot;span&quot;) {
   outputFormat &lt;- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {
     if (type == &quot;div&quot;) {
-      cat(&quot;\\begin{&quot;, textstyle, &quot;}\n&quot;, sep = &quot;&quot;)
+      cat(&quot;\\nopandoc\\begin{&quot;, textstyle, &quot;}}\n&quot;, sep = &quot;&quot;)
     } else {
       paste0(&quot;\\&quot;, textstyle, &quot;{&quot;)
     }
@@ -251,7 +251,7 @@ endStyleFmt &lt;- function(textstyle, type = &quot;span&quot;) {
   outputFormat &lt;- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {
     if (type == &quot;div&quot;) {
-      cat(&quot;\n\\end{&quot;, textstyle, &quot;}&quot;, sep = &quot;&quot;)
+      cat(&quot;\n\\nopandoc{\\end{&quot;, textstyle, &quot;}}&quot;, sep = &quot;&quot;)
     } else {
       paste0(&quot;}&quot;)
     }
@@ -300,6 +300,8 @@ endVerbatim &lt;- function() {
   
   \newcommand{\advert}[1]{\textit{\advertcolor{#1}}}
   \newcommand{\codecommand}[1]{\texttt{\colorbox{backcolor}{#1}}}</code></pre>
+<p>Par ailleurs, pandoc ne considère pas le texte inclus entre les deux entrées lateX <span class="codecommand">begin</span> et <span class="codecommand">end</span> comme de la syntaxe markdown. Pour que ce texte soit considéré comme tel lorsque vous utilisez les fonctions <span class="codecommand">beginStyleFmt</span> et <span class="codecommand">beginStyleFmt</span> vous devez définir une nouvelle commande dans votre fichier <span class="codecommand">header.tex</span> :</p>
+<pre class="latex"><code>  \newcommand{\nopandoc}[1]{#1} </code></pre>
 <!-- english -->
 <!-- french -->
 <p>De même, pour le rendu html, les fonctions doivent être utilisées avec un fichier d’accompagnement css, déclaré dans l’en-tête YAML de votre fichier Rmd de cette façon: <span class="codecommand">css: style.css</span>. Par exemple ici :</p>
@@ -463,7 +465,7 @@ endVerbatim &lt;- function() {
 <pre class="r"><code>beginCentering &lt;- function() {
   outputFormat &lt;- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer'))
-    cat(&quot;\n\\begin{center}\n&quot;, sep = &quot;&quot;)
+    cat(&quot;\n\\nopandoc{\\begin{center}}\n&quot;, sep = &quot;&quot;)
   else if (outputFormat == 'html')
     cat('\n&lt;p style=&quot;text-align: center&quot;&gt;\n', sep = &quot;&quot;)
   else
@@ -472,7 +474,7 @@ endVerbatim &lt;- function() {
 endCentering &lt;- function() {
   outputFormat &lt;- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer'))
-    cat(&quot;\n\\end{center}\n&quot;, sep = &quot;&quot;)
+    cat(&quot;\n\\nopandoc{\\end{center}}\n&quot;, sep = &quot;&quot;)
   else if (outputFormat == 'html')
     cat(&quot;\n&lt;/p&gt;\n&quot;, sep = &quot;&quot;)
   else
@@ -484,7 +486,7 @@ endCentering &lt;- function() {
 <pre><code>  ```{r, echo=FALSE, out.width='25%', fig.align='default', results='asis'}
   beginCentering()
   knitr::include_graphics(paste0(figWD, &quot;/fr.png&quot;))
-  cat(&quot;\vspace{1cm}&quot;)
+  cat(&quot;\\vspace{1cm}&quot;)
   cat(&quot; &quot;)
   knitr::include_graphics(paste0(figWD, &quot;/gb.png&quot;))
   endCentering()

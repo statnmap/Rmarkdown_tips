@@ -1,0 +1,19 @@
+Package: KnitFmt
+Type: Package
+Title: Formatting HTML and PDF of rmarkdown documents
+Version: 0.1.0
+Author: Sébastien Rochette
+Maintainer: Sébastien Rochette <sebastienrochetefr@gmail.com>
+Description: This package provides functions to be used in rmarkdown documents
+    to allow text formatting for both HTML and PDF
+License: GPL
+Encoding: UTF-8
+LazyData: true
+Imports:
+    knitr,
+    rmarkdown,
+    methods
+Suggests:
+    testthat
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1

@@ -57,8 +57,9 @@ knit_hooks$set(source = function(x, options) {
   }
 })
 # Source the formatting functions detailed below
-source("./functions.R")
-
+# source("./R/functions.R")
+# devtools::install_github("statnmap/Rmarkdown_tips")
+library(KnitFmt)
 ```
 ***
 `r if (lang == "EN") {knitr::include_graphics('./myfigdirectory/gb.png', dpi = 400)} else if (lang == "FR") {knitr::include_graphics('./myfigdirectory/fr.png', dpi = 400)}` `r if (lang == "EN") {"This version is the english version."} else if (lang == "FR") {"Cette version est la version française."}`  
@@ -174,7 +175,7 @@ L\'ption ', styleFmt("type", "codecommand"), ' permet notamment d\'utiliser ', s
 - ', styleFmt("beginVerbatim", "codecommand"), ' et ', styleFmt("endVerbatim", "codecommand"), ' sont spécifiques au format "verbatim". Ces fonctions permettent d\'encadrer une zone de code avec une couleur de fond, ce qui n\'est pas implémenté par défaut avec lateX notamment.',
 sep = "")
 ```
-```{r R-functions, echo=TRUE, purl=FALSE}
+```{r R-functions, echo=TRUE, purl=FALSE, eval=FALSE}
 # Simple color Format functions 
 colFmt <- function(x, colorname, type = "span") {
   outputFormat <- knitr:::pandoc_to()
@@ -200,7 +201,7 @@ beginStyleFmt <- function(textstyle, type = "span") {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {
     if (type == "div") {
-      cat("\\begin{", textstyle, "}\n", sep = "")
+      cat("\\nopandoc\\begin{", textstyle, "}}\n", sep = "")
     } else {
       paste0("\\", textstyle, "{")
     }
@@ -218,7 +219,7 @@ endStyleFmt <- function(textstyle, type = "span") {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {
     if (type == "div") {
-      cat("\n\\end{", textstyle, "}", sep = "")
+      cat("\n\\nopandoc{\\end{", textstyle, "}}", sep = "")
     } else {
       paste0("}")
     }
@@ -280,6 +281,19 @@ sep = "")
   
   \newcommand{\advert}[1]{\textit{\advertcolor{#1}}}
   \newcommand{\codecommand}[1]{\texttt{\colorbox{backcolor}{#1}}}
+```
+```{r NoPandocEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
+cat(
+'By the way, pandoc do not consider text between ', styleFmt("begin", "codecommand"), ' and ', styleFmt("end", "codecommand"), ' lateX entries as markdown syntax. To be able to consider your markdown syntax when using functions ', styleFmt("beginStyleFmt", "codecommand"), ' and ', styleFmt("beginStyleFmt", "codecommand"), ' you need to define a command in your ', styleFmt("header.tex", "codecommand"), ' file as follows:',
+sep = "")
+```
+```{r NoPandocFR, echo=FALSE, eval=(lang == "FR"), results='asis'}
+cat(
+'Par ailleurs, pandoc ne considère pas le texte inclus entre les deux entrées lateX ', styleFmt("begin", "codecommand"), ' et ', styleFmt("end", "codecommand"), ' comme de la syntaxe markdown. Pour que ce texte soit considéré comme tel lorsque vous utilisez les fonctions ', styleFmt("beginStyleFmt", "codecommand"), ' et ', styleFmt("beginStyleFmt", "codecommand"), ' vous devez définir une nouvelle commande dans votre fichier ', styleFmt("header.tex", "codecommand"), ' :',
+sep = "")
+```
+```latex
+  \newcommand{\nopandoc}[1]{#1} 
 ```
 <!-- english -->
 ```{r HeaderCssEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
@@ -544,7 +558,7 @@ cat(
 beginCentering <- function() {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer'))
-    cat("\n\\begin{center}\n", sep = "")
+    cat("\n\\nopandoc{\\begin{center}}\n", sep = "")
   else if (outputFormat == 'html')
     cat('\n<p style="text-align: center">\n', sep = "")
   else
@@ -553,7 +567,7 @@ beginCentering <- function() {
 endCentering <- function() {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer'))
-    cat("\n\\end{center}\n", sep = "")
+    cat("\n\\nopandoc{\\end{center}}\n", sep = "")
   else if (outputFormat == 'html')
     cat("\n</p>\n", sep = "")
   else
@@ -569,7 +583,7 @@ cat(
 '  ```{r, echo=FALSE, out.width=\'25%\', fig.align=\'default\', results=\'asis\'}
   beginCentering()
   knitr::include_graphics(paste0(figWD, "/fr.png"))
-  cat("\\vspace{1cm}")
+  cat("\\\\vspace{1cm}")
   cat(" ")
   knitr::include_graphics(paste0(figWD, "/gb.png"))
   endCentering()
