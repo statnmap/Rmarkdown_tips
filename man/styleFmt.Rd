@@ -2,9 +2,15 @@
 % Please edit documentation in R/functions.R
 \name{styleFmt}
 \alias{styleFmt}
+\alias{beginStyleFmt}
+\alias{endStyleFmt}
 \title{Style format function, not specific for textcolor}
 \usage{
 styleFmt(x, textstyle, type = "span")
+
+beginStyleFmt(textstyle, type = "span")
+
+endStyleFmt(textstyle, type = "span")
 }
 \arguments{
 \item{x}{}
@@ -15,4 +21,12 @@ styleFmt(x, textstyle, type = "span")
 }
 \description{
 Style format function, not specific for textcolor
+}
+\details{
+# This function need to be used with an additional in_header file
+# For a PDF, this needs to be included in your header.tex file
+\\definecolor{advertcolor}{HTML}{FF8929}
+\\newcommand{\\advert}[1]{\\textit{\\textcolor{advertcolor}{#1}}}
+     % -- command for pandoc trick with \begin and \end -- %
+\\newcommand{\\nopandoc}[1]{#1}
 }

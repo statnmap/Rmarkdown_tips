@@ -2,22 +2,22 @@
   color: #FF8929;
   font-style: italic;
 }
-.codecommand {
+.codecommand, .codebox code {
   background-color: #E0E0E0;
-  font-family: Courier New, Courier, monospace;
+  font-family: monospace;
 }
 .Large {
   font-size: 2em;
 }
 .blueShaded {
   background-color: #D6E8F5;
-  font-family: Courier New, Courier, monospace;
+  font-family: monospace;
 }
 .blueShaded pre:not([class]) {
     background-color: #D6E8F5;
 }
 
-/* Custom specific to my website */
+/* Customisation specific to my website */
 body:before,
 .site-header {
 	background-color: #1e73be;
@@ -25,6 +25,7 @@ body:before,
 }
 body {
   background-color: #1e73be;
+  text-align: justify;
 }
     
 .main-container {

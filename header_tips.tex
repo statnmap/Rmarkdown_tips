@@ -67,6 +67,15 @@
     \end{snugshade}%
 }
 
+% - code background environment inline - %
+\newsavebox{\selvestebox}
+\newenvironment{codebox}{
+  \begin{lrbox}{\selvestebox}%
+}{
+  \end{lrbox}%
+  \colorbox{backcolor}{\usebox{\selvestebox}}
+}
+
 % -- command for pandoc trick with \begin and \end -- %
 \newcommand{\nopandoc}[1]{#1} 
 

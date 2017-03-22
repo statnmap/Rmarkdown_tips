@@ -159,6 +159,7 @@ Because some text and background colors are not written in the same way for html
 - ', styleFmt("styleFmt", "codecommand"), ' is used in combination with definition of a style in external files.
 - ', styleFmt("beginStyleFmt", "codecommand"), ' and ', styleFmt("endStyleFmt", "codecommand"), ' are a separated variante of ', styleFmt("styleFmt", "codecommand"), ' to be used if your text contain special characters (like underscore) that may be misinterpretated by lateX.  
 Option ', styleFmt("type", "codecommand"), ' can be defined to use ', styleFmt("div", "codecommand"), ' instead of ', styleFmt("span", "codecommand"), ' to allow multiple lines with html output. Similarly for latex, if ', styleFmt("type == \"div\"", "codecommand"), ' is defined, command will be used with ', styleFmt("begin", "codecommand"), ' and ', styleFmt("end", "codecommand"), '.  
+- ', styleFmt("verbatimFmt", "codecommand"), ' is for verbatim code with specific color style, but protected so that pandoc do not try to execute embed code.  
 - ', styleFmt("beginVerbatim", "codecommand"), ' and ', styleFmt("endVerbatim", "codecommand"), ' are specific to embed verbatim code text with background color, which is not implemented by default in lateX.',
 sep = "")
 ```
@@ -171,7 +172,8 @@ Les couleurs de texte ou de fond ne se codent pas de la même manière en html o
 - ', styleFmt("colFmt", "codecommand"), ' est utilisé pour colorer du texte en utilisant les noms des couleurs reconnues en lateX et html comme "blue", "red", ...
 - ', styleFmt("styleFmt", "codecommand"), ' est utilisé en combinaison avec la définition de styles dans un fichier à part.
 - ', styleFmt("beginStyleFmt", "codecommand"), ' et ', styleFmt("endStyleFmt", "codecommand"), ' sont une variante séparée de ', styleFmt("styleFmt", "codecommand"), ' qui peut s\'utiliser lorsqu\'il y a des caractères spéciaux dans le texte (comme underscore) qui peuvent être mal interprétés avec lateX.  
-L\'ption ', styleFmt("type", "codecommand"), ' permet notamment d\'utiliser ', styleFmt("div", "codecommand"), ' au lieu de ', styleFmt("span", "codecommand"), ' pour permettre d\'afficher du texte sur plusieurs lignes. De manière similaire avec lateX, si ', styleFmt("type == \"div\"", "codecommand"), ' est défini, la commande utilisera une ouverture du format avec ', styleFmt("begin", "codecommand"), ' et une fermeture avec ', styleFmt("end", "codecommand"), '.  
+L\'option ', styleFmt("type", "codecommand"), ' permet notamment d\'utiliser ', styleFmt("div", "codecommand"), ' au lieu de ', styleFmt("span", "codecommand"), ' pour permettre d\'afficher du texte sur plusieurs lignes. De manière similaire avec lateX, si ', styleFmt("type == \"div\"", "codecommand"), ' est défini, la commande utilisera une ouverture du format avec ', styleFmt("begin", "codecommand"), ' et une fermeture avec ', styleFmt("end", "codecommand"), '.  
+- ', styleFmt("verbatimFmt", "codecommand"), ' est pour un environnement de code verbatim avec des couleurs spécifiques, mais protégé de tel sorte que pandoc n\'essaie pas d\'éxécuter le code à l\'intérieur.  
 - ', styleFmt("beginVerbatim", "codecommand"), ' et ', styleFmt("endVerbatim", "codecommand"), ' sont spécifiques au format "verbatim". Ces fonctions permettent d\'encadrer une zone de code avec une couleur de fond, ce qui n\'est pas implémenté par défaut avec lateX notamment.',
 sep = "")
 ```
@@ -232,6 +234,16 @@ endStyleFmt <- function(textstyle, type = "span") {
   } else {
     ""
   }
+}
+# Specific inline verbatim environment
+verbatimFmt <- function(x, type = "span") {
+  outputFormat <- knitr:::pandoc_to()
+  if (outputFormat %in% c('latex', 'beamer'))
+    paste0("\\nopandoc{\\begin{codebox}}\\verb|", x, "|\\nopandoc{\\end{codebox}}")
+  else if (outputFormat == 'html')
+    paste0("<", type," class='codebox'>`` ", x, " ``</", type, ">")
+  else
+    x
 }
 # Specific to verbatim environment 
 # to be able to show you the 'asis' chunks with background color.
@@ -311,6 +323,7 @@ sep = "")
 ```
 
 ```css
+/* Look at the style.css file for the complete css file */
   .advert {
     color: #FF8929;
     font-style: italic;
@@ -323,6 +336,20 @@ sep = "")
     background-color:#E0E0E0;
     font-family: Courier New, Courier, monospace;
   }
+```
+<!-- english -->
+```{r CodecommandEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
+cat(
+'*[edit: 22 March 2017]* In my Rmd file, you will remark that I use ', styleFmt("styleFmt(\"code\", \"codecommand\")", "codecommand"), ' or, like here in this paragraph, ', verbatimFmt("verbatimFmt(\"code\")"),
+' to highlight the code inline in the text. I could directly use the markdown syntax with back ticks ', verbatimFmt("\x60code\x60"), ' to embed code. However in lateX this is only transformed as ', verbatimFmt("\\texttt"), ' command, which format could be modified but would be applied to all other text with this format, even if it is not a code. In HTML, this is embed in ', verbatimFmt("<code>code<\\code>"), ' so that you can modify the css according to your needs.',
+sep = "")
+```
+<!-- french -->
+```{r CodecommandFR, echo=FALSE, eval=(lang == "FR"), results='asis'}
+cat(
+'*[edit: 22 Mars 2017]* Dans mon fichier Rmd, vous remarquerez que j\'utilise la fonction : \\linebreak', styleFmt("styleFmt(\"code\", \"codecommand\")", "codecommand"), ' ou, comme dans ce paragraphe, ', verbatimFmt("verbatimFmt(\"code\")"),
+' pour mettre en évidence le code intégré dans une ligne de texte. J\'aurai pu utiliser directement la syntaxe markdown avec les "back ticks" ', verbatimFmt("\x60code\x60"), '. Cependant, avec le passage vers lateX cette formulation est transformée en ', verbatimFmt("\\texttt"), ', dont le format peut être modifié, mais s\'appliquerait à tout texte avec ce format, même si ce n\'est pas du code. En HTML, la syntaxe markdown avec les "back ticks" intègre le texte entre deux balises code ', verbatimFmt("<code>code<\\code>"), ' dont le format est directement modifiable avec du css.',
+sep = "")
 ```
 
 <!-- english -->
@@ -543,6 +570,26 @@ knitr::include_graphics(paste0(figWD, "/gb.png"))
 ```
 
 <!-- english -->
+```{r TwoImagesEN_edit, echo=FALSE, eval=(lang == "EN"), results='asis'}
+cat(
+'*[edit: 22 March 2017]*
+With recent version of knitr, you can use ', styleFmt("fig.show='hold'", "codecommand"), ' to show the two images side-by-side, but you can not use ', styleFmt("fig.align='center'", "codecommand"), '.'
+)
+```
+<!-- french -->
+```{r TwoImagesFR_edit, echo=FALSE, eval=(lang == "FR"), results='asis'}
+cat(
+'*[edit: 22 Mars 2017]*
+Une récente version de knitr permet d\'utiliser ', styleFmt("fig.show='hold'", "codecommand"), ' pour afficher les 2 images côte-à-côte, mais vous ne pouvez pas utiliser ', styleFmt("fig.align='center'", "codecommand"), '.', 
+sep = "")
+```
+
+```{r, echo=TRUE, out.width='25%', fig.align='default', fig.show='hold'}
+knitr::include_graphics(paste0(figWD, "/fr.png"))
+knitr::include_graphics(paste0(figWD, "/gb.png"))
+```
+
+<!-- english -->
 ```{r TwoImagesLineEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
 cat(
 'Here, we use two functions to be place before and after the chunk with ', styleFmt("results='asis'", "codecommand"), ' and a space between images:'
@@ -583,8 +630,11 @@ cat(
 '  ```{r, echo=FALSE, out.width=\'25%\', fig.align=\'default\', results=\'asis\'}
   beginCentering()
   knitr::include_graphics(paste0(figWD, "/fr.png"))
-  cat("\\\\vspace{1cm}")
-  cat(" ")
+  cat(
+    ifelse(knitr:::pandoc_to() == "html",
+           "<a style=\'margin-left: 10px\'></a>",
+           "\\vspace{1cm}"),
+    sep = "")
   knitr::include_graphics(paste0(figWD, "/gb.png"))
   endCentering()
   ```',
@@ -595,8 +645,11 @@ endVerbatim()
 ```{r TwoImagesLineChunkOut, echo=FALSE, out.width='25%', fig.align='default', results='asis'}
 beginCentering()
 knitr::include_graphics(paste0(figWD, "/fr.png"))
-cat("\\vspace{1cm}")
-cat(" ")
+cat(
+  ifelse(knitr:::pandoc_to() == "html",
+         "<a style='margin-left: 10px'></a>",
+         "\\vspace{1cm}"),
+  sep = "")
 knitr::include_graphics(paste0(figWD, "/gb.png"))
 endCentering()
 ```

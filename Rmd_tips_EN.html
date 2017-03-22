@@ -67,7 +67,7 @@ h6 {
 }
 </style>
 
-<link href="data:text/css;charset=utf-8,%2Eadvert%20%7B%0Acolor%3A%20%23FF8929%3B%0Afont%2Dstyle%3A%20italic%3B%0A%7D%0A%2Ecodecommand%20%7B%0Abackground%2Dcolor%3A%20%23E0E0E0%3B%0Afont%2Dfamily%3A%20Courier%20New%2C%20Courier%2C%20monospace%3B%0A%7D%0A%2ELarge%20%7B%0Afont%2Dsize%3A%202em%3B%0A%7D%0A%2EblueShaded%20%7B%0Abackground%2Dcolor%3A%20%23D6E8F5%3B%0Afont%2Dfamily%3A%20Courier%20New%2C%20Courier%2C%20monospace%3B%0A%7D%0A%2EblueShaded%20pre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23D6E8F5%3B%0A%7D%0A%0Abody%3Abefore%2C%0A%2Esite%2Dheader%20%7B%0Abackground%2Dcolor%3A%20%231e73be%3B%0Adisplay%3A%20none%3B%0A%7D%0Abody%20%7B%0Abackground%2Dcolor%3A%20%231e73be%3B%0A%7D%0A%2Emain%2Dcontainer%20%7B%0Amax%2Dwidth%3A%201025px%3B%0Amargin%2Dleft%3A%20auto%3B%0Amargin%2Dright%3A%20auto%3B%0Abackground%2Dcolor%3A%20white%3B%0Apadding%3A%201em%2030px%2015px%3B%0A%7D%0A" rel="stylesheet" type="text/css" />
+<link href="data:text/css;charset=utf-8,%2Eadvert%20%7B%0Acolor%3A%20%23FF8929%3B%0Afont%2Dstyle%3A%20italic%3B%0A%7D%0A%2Ecodecommand%2C%20%2Ecodebox%20code%20%7B%0Abackground%2Dcolor%3A%20%23E0E0E0%3B%0Afont%2Dfamily%3A%20monospace%3B%0A%7D%0A%2ELarge%20%7B%0Afont%2Dsize%3A%202em%3B%0A%7D%0A%2EblueShaded%20%7B%0Abackground%2Dcolor%3A%20%23D6E8F5%3B%0Afont%2Dfamily%3A%20monospace%3B%0A%7D%0A%2EblueShaded%20pre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23D6E8F5%3B%0A%7D%0A%0Abody%3Abefore%2C%0A%2Esite%2Dheader%20%7B%0Abackground%2Dcolor%3A%20%231e73be%3B%0Adisplay%3A%20none%3B%0A%7D%0Abody%20%7B%0Abackground%2Dcolor%3A%20%231e73be%3B%0Atext%2Dalign%3A%20justify%3B%0A%7D%0A%2Emain%2Dcontainer%20%7B%0Amax%2Dwidth%3A%201025px%3B%0Amargin%2Dleft%3A%20auto%3B%0Amargin%2Dright%3A%20auto%3B%0Abackground%2Dcolor%3A%20white%3B%0Apadding%3A%201em%2030px%2015px%3B%0A%7D%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Rmarkdown conditional chunks to create multilingual pdf and html with images</h1>
 <h4 class="author"><em>Sébastien Rochette - StatnMap</em></h4>
-<h4 class="date"><em>21 mars, 2017</em></h4>
+<h4 class="date"><em>22 mars, 2017</em></h4>
 
 </div>
 
@@ -190,7 +190,7 @@ I personally use an external <em>“run-all”</em> R-script to choose options t
 <p>I will modify this list if I face new difficulties or I find better ways to do things.<br />
 Files needed to create this article are stored <a href="https://github.com/statnmap/Rmarkdown_tips">here on my github</a>. <!-- french --></p>
 <pre class="r"><code>packageVersion(&quot;knitr&quot;)</code></pre>
-<pre><code>## [1] '1.15.1'</code></pre>
+<pre><code>## [1] '1.15.15'</code></pre>
 <!-- english -->
 </div>
 <div id="functions-for-html-or-pdf-specific-rendering" class="section level2">
@@ -201,6 +201,8 @@ Files needed to create this article are stored <a href="https://github.com/statn
 <li><span class="codecommand">styleFmt</span> is used in combination with definition of a style in external files.</li>
 <li><span class="codecommand">beginStyleFmt</span> and <span class="codecommand">endStyleFmt</span> are a separated variante of <span class="codecommand">styleFmt</span> to be used if your text contain special characters (like underscore) that may be misinterpretated by lateX.<br />
 Option <span class="codecommand">type</span> can be defined to use <span class="codecommand">div</span> instead of <span class="codecommand">span</span> to allow multiple lines with html output. Similarly for latex, if <span class="codecommand">type == “div”</span> is defined, command will be used with <span class="codecommand">begin</span> and <span class="codecommand">end</span>.<br />
+</li>
+<li><span class="codecommand">verbatimFmt</span> is for verbatim code with specific color style, but protected so that pandoc do not try to execute embed code.<br />
 </li>
 <li><span class="codecommand">beginVerbatim</span> and <span class="codecommand">endVerbatim</span> are specific to embed verbatim code text with background color, which is not implemented by default in lateX. <!-- français --></li>
 </ul>
@@ -261,6 +263,16 @@ endStyleFmt &lt;- function(textstyle, type = &quot;span&quot;) {
     &quot;&quot;
   }
 }
+# Specific inline verbatim environment
+verbatimFmt &lt;- function(x, type = &quot;span&quot;) {
+  outputFormat &lt;- knitr:::pandoc_to()
+  if (outputFormat %in% c('latex', 'beamer'))
+    paste0(&quot;\\nopandoc{\\begin{codebox}}\\verb|&quot;, x, &quot;|\\nopandoc{\\end{codebox}}&quot;)
+  else if (outputFormat == 'html')
+    paste0(&quot;&lt;&quot;, type,&quot; class='codebox'&gt;`` &quot;, x, &quot; ``&lt;/&quot;, type, &quot;&gt;&quot;)
+  else
+    x
+}
 # Specific to verbatim environment 
 # to be able to show you the 'asis' chunks with background color.
 beginVerbatim &lt;- function() {
@@ -299,7 +311,8 @@ endVerbatim &lt;- function() {
 <pre class="latex"><code>  \newcommand{\nopandoc}[1]{#1} </code></pre>
 <!-- english -->
 <p>Similarly, for html rendering, functions should be used in an external css file with option <span class="codecommand">css: style.css</span> in the YAML header of your rmarkdown file. Here for instance the css file includes: <!-- french --></p>
-<pre class="css"><code>  .advert {
+<pre class="css"><code>/* Look at the style.css file for the complete css file */
+  .advert {
     color: #FF8929;
     font-style: italic;
   }
@@ -311,6 +324,8 @@ endVerbatim &lt;- function() {
     background-color:#E0E0E0;
     font-family: Courier New, Courier, monospace;
   }</code></pre>
+<!-- english -->
+<p><em>[edit: 22 March 2017]</em> In my Rmd file, you will remark that I use <span class="codecommand">styleFmt(“code”, “codecommand”)</span> or, like here in this paragraph, <span class="codebox"><code>verbatimFmt(&quot;code&quot;)</code></span> to highlight the code inline in the text. I could directly use the markdown syntax with back ticks <span class="codebox"><code>`code`</code></span> to embed code. However in lateX this is only transformed as <span class="codebox"><code>\texttt</code></span> command, which format could be modified but would be applied to all other text with this format, even if it is not a code. In HTML, this is embed in <span class="codebox"><code>&lt;code&gt;code&lt;\code&gt;</code></span> so that you can modify the css according to your needs. <!-- french --></p>
 <!-- english -->
 </div>
 </div>
@@ -445,6 +460,11 @@ endVerbatim &lt;- function() {
 <p>A problem while using two images side by side using <span class="codecommand"> “knitr::include_graphics” </span> in the same chunk is that option <span class="codecommand">fig.align = ‘center’</span> applies separately to the two images, so that there are one under the other, in two different paragraphs: <!-- french --></p>
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAD1BMVEUAI5Wqttz////5ub7tKTkCNwK+AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtC2BlAPkAAAAsSURBVEjH7csxDQAwDAOwqFCmQRl/TH2nYLB/J2VOua9EURRFURRFURRF+SxxZbUiYEKYmgAAAABJRU5ErkJggg==" width="25%" style="display: block; margin: auto;" /><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAyCAMAAACd646MAAAAe1BMVEXaSlzywMb////+/v6zvtgyT5YAJH1VbajPFCsrSZOir9D8/P3//f3vsbjWOEv+/P3tqbLWN0v9/f6rt9QtS5TM1OXByuByhrf//v70y9DkeoffYnLmhpL21dl2irn42t7ojJjjdoT0yM3cU2TVMkbsoar++/zzxcvbTl+3VBz8AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtIiLXmJUAAAFHSURBVFjD7ZjrCsIwDEY/hMkG6lOo7/+IDnXrVnM5VRCR5ddY05w2SW9RvyuyD2VU6Gch2odJV48OBNMCGZuPRVPTR47hkDVigiAMhdSIEVI8V6R7HzKMDafaoqyftgECWYa7iKzp2Zgc4llS1NgG8a0oU6CQyIJib3YMMsSRFVWMINkARafsQ3JXi3vWhpBoiueIBWF5KbqgulfIQBey6NZwlxUkz8cI4rqhghzp5qpdi9QzgfJHkP4LskE2yAb5Fci2QTZB3EOrMnzxIQsN59Byjt/KwDWeyfPnmR+/XmfzImEMBkB8NzhXIuA0UURwuUsxoojwmppglIUbXrjDFBBVTJ8OwQDFPZs+glwL4jkCnnOOFVEEfJialkQXFH5iG5EV3RoaigUvgxbd5JrKHhVGFNFYwFlhRBHNpagFRlm4PyiqzZgbj/1vMQ8MbRQAAAAASUVORK5CYII=" width="25%" style="display: block; margin: auto;" /></p>
 <!-- english -->
+<p><em>[edit: 22 March 2017]</em> With recent version of knitr, you can use <span class="codecommand">fig.show=‘hold’</span> to show the two images side-by-side, but you can not use <span class="codecommand">fig.align=‘center’</span> . <!-- french --></p>
+<pre class="r"><code>knitr::include_graphics(paste0(figWD, &quot;/fr.png&quot;))
+knitr::include_graphics(paste0(figWD, &quot;/gb.png&quot;))</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAD1BMVEUAI5Wqttz////5ub7tKTkCNwK+AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtC2BlAPkAAAAsSURBVEjH7csxDQAwDAOwqFCmQRl/TH2nYLB/J2VOua9EURRFURRFURRF+SxxZbUiYEKYmgAAAABJRU5ErkJggg==" width="25%" /><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAyCAMAAACd646MAAAAe1BMVEXaSlzywMb////+/v6zvtgyT5YAJH1VbajPFCsrSZOir9D8/P3//f3vsbjWOEv+/P3tqbLWN0v9/f6rt9QtS5TM1OXByuByhrf//v70y9DkeoffYnLmhpL21dl2irn42t7ojJjjdoT0yM3cU2TVMkbsoar++/zzxcvbTl+3VBz8AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtIiLXmJUAAAFHSURBVFjD7ZjrCsIwDEY/hMkG6lOo7/+IDnXrVnM5VRCR5ddY05w2SW9RvyuyD2VU6Gch2odJV48OBNMCGZuPRVPTR47hkDVigiAMhdSIEVI8V6R7HzKMDafaoqyftgECWYa7iKzp2Zgc4llS1NgG8a0oU6CQyIJib3YMMsSRFVWMINkARafsQ3JXi3vWhpBoiueIBWF5KbqgulfIQBey6NZwlxUkz8cI4rqhghzp5qpdi9QzgfJHkP4LskE2yAb5Fci2QTZB3EOrMnzxIQsN59Byjt/KwDWeyfPnmR+/XmfzImEMBkB8NzhXIuA0UURwuUsxoojwmppglIUbXrjDFBBVTJ8OwQDFPZs+glwL4jkCnnOOFVEEfJialkQXFH5iG5EV3RoaigUvgxbd5JrKHhVGFNFYwFlhRBHNpagFRlm4PyiqzZgbj/1vMQ8MbRQAAAAASUVORK5CYII=" width="25%" /></p>
+<!-- english -->
 <p>Here, we use two functions to be place before and after the chunk with <span class="codecommand">results=‘asis’</span> and a space between images: <!-- french --></p>
 <pre class="r"><code>beginCentering &lt;- function() {
   outputFormat &lt;- knitr:::pandoc_to()
@@ -470,15 +490,18 @@ endCentering &lt;- function() {
 <pre><code>  ```{r, echo=FALSE, out.width='25%', fig.align='default', results='asis'}
   beginCentering()
   knitr::include_graphics(paste0(figWD, &quot;/fr.png&quot;))
-  cat(&quot;\\vspace{1cm}&quot;)
-  cat(&quot; &quot;)
+  cat(
+    ifelse(knitr:::pandoc_to() == &quot;html&quot;,
+           &quot;&lt;a style='margin-left: 10px'&gt;&lt;/a&gt;&quot;,
+           &quot;\vspace{1cm}&quot;),
+    sep = &quot;&quot;)
   knitr::include_graphics(paste0(figWD, &quot;/gb.png&quot;))
   endCentering()
   ```</code></pre>
 </div>
 <!-- We can not echo this with the two include_graphics functions -->
 <p style="text-align: center">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAD1BMVEUAI5Wqttz////5ub7tKTkCNwK+AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtC2BlAPkAAAAsSURBVEjH7csxDQAwDAOwqFCmQRl/TH2nYLB/J2VOua9EURRFURRFURRF+SxxZbUiYEKYmgAAAABJRU5ErkJggg==" width="25%" /> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAyCAMAAACd646MAAAAe1BMVEXaSlzywMb////+/v6zvtgyT5YAJH1VbajPFCsrSZOir9D8/P3//f3vsbjWOEv+/P3tqbLWN0v9/f6rt9QtS5TM1OXByuByhrf//v70y9DkeoffYnLmhpL21dl2irn42t7ojJjjdoT0yM3cU2TVMkbsoar++/zzxcvbTl+3VBz8AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtIiLXmJUAAAFHSURBVFjD7ZjrCsIwDEY/hMkG6lOo7/+IDnXrVnM5VRCR5ddY05w2SW9RvyuyD2VU6Gch2odJV48OBNMCGZuPRVPTR47hkDVigiAMhdSIEVI8V6R7HzKMDafaoqyftgECWYa7iKzp2Zgc4llS1NgG8a0oU6CQyIJib3YMMsSRFVWMINkARafsQ3JXi3vWhpBoiueIBWF5KbqgulfIQBey6NZwlxUkz8cI4rqhghzp5qpdi9QzgfJHkP4LskE2yAb5Fci2QTZB3EOrMnzxIQsN59Byjt/KwDWeyfPnmR+/XmfzImEMBkB8NzhXIuA0UURwuUsxoojwmppglIUbXrjDFBBVTJ8OwQDFPZs+glwL4jkCnnOOFVEEfJialkQXFH5iG5EV3RoaigUvgxbd5JrKHhVGFNFYwFlhRBHNpagFRlm4PyiqzZgbj/1vMQ8MbRQAAAAASUVORK5CYII=" width="25%" />
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAD1BMVEUAI5Wqttz////5ub7tKTkCNwK+AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtC2BlAPkAAAAsSURBVEjH7csxDQAwDAOwqFCmQRl/TH2nYLB/J2VOua9EURRFURRFURRF+SxxZbUiYEKYmgAAAABJRU5ErkJggg==" width="25%" /><a style="margin-left: 10px"></a><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAyCAMAAACd646MAAAAe1BMVEXaSlzywMb////+/v6zvtgyT5YAJH1VbajPFCsrSZOir9D8/P3//f3vsbjWOEv+/P3tqbLWN0v9/f6rt9QtS5TM1OXByuByhrf//v70y9DkeoffYnLmhpL21dl2irn42t7ojJjjdoT0yM3cU2TVMkbsoar++/zzxcvbTl+3VBz8AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EDBxAtIiLXmJUAAAFHSURBVFjD7ZjrCsIwDEY/hMkG6lOo7/+IDnXrVnM5VRCR5ddY05w2SW9RvyuyD2VU6Gch2odJV48OBNMCGZuPRVPTR47hkDVigiAMhdSIEVI8V6R7HzKMDafaoqyftgECWYa7iKzp2Zgc4llS1NgG8a0oU6CQyIJib3YMMsSRFVWMINkARafsQ3JXi3vWhpBoiueIBWF5KbqgulfIQBey6NZwlxUkz8cI4rqhghzp5qpdi9QzgfJHkP4LskE2yAb5Fci2QTZB3EOrMnzxIQsN59Byjt/KwDWeyfPnmR+/XmfzImEMBkB8NzhXIuA0UURwuUsxoojwmppglIUbXrjDFBBVTJ8OwQDFPZs+glwL4jkCnnOOFVEEfJialkQXFH5iG5EV3RoaigUvgxbd5JrKHhVGFNFYwFlhRBHNpagFRlm4PyiqzZgbj/1vMQ8MbRQAAAAASUVORK5CYII=" width="25%" />
 </p>
 <!-- english -->
 </div>

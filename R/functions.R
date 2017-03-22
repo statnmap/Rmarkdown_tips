@@ -32,18 +32,14 @@ styleFmt <- function(x, textstyle, type = "span") {
     x
 }
 
-#' Style format options for longer text output
-#'
-#' @param textstyle 
-#' @param type 
-#' @return
+#' @rdname styleFmt
 #' @details
 #' # This function need to be used with an additional in_header file
 #' # For a PDF, this needs to be included in your header.tex file
-#' \definecolor{advertcolor}{HTML}{FF8929}
-#' \newcommand{\advert}[1]{\textit{\textcolor{advertcolor}{#1}}}
+#' \\definecolor{advertcolor}{HTML}{FF8929}
+#' \\newcommand{\\advert}[1]{\\textit{\\textcolor{advertcolor}{#1}}}
 #'      % -- command for pandoc trick with \begin and \end -- %
-#' \newcommand{\nopandoc}[1]{#1} 
+#' \\newcommand{\\nopandoc}[1]{#1} 
 #' 
 #' @export
 beginStyleFmt <- function(textstyle, type = "span") {
@@ -65,7 +61,7 @@ beginStyleFmt <- function(textstyle, type = "span") {
   }
 }
 
-#' @rdname beginStyleFmt
+#' @rdname styleFmt
 #'
 #' @export
 #'
@@ -90,7 +86,33 @@ endStyleFmt <- function(textstyle, type = "span") {
 
 #' Specific to verbatim environment 
 #' to be able to show 'asis' chunks with background color.
-#' @return
+#'
+#' @param x 
+#' @param type "span" or "p" for html output
+#' @details codebox has to be defined in header.tex or css file
+#' % Here for lateX %
+#' \\newsavebox{\\selvestebox}
+#' \\newenvironment{codebox}{
+#'   \\begin{lrbox}{\\selvestebox}%
+#' }{
+#'   \\end{lrbox}%
+#'   \\colorbox[HTML]{E0E0E0}{\\usebox{\\selvestebox}}
+#' }
+
+#' @return environment for specific format defined in header.tex or css file
+#' @export
+verbatimFmt <- function(x, type = "span") {
+  outputFormat <- knitr:::pandoc_to()
+  if (outputFormat %in% c('latex', 'beamer'))
+    paste0("\\nopandoc{\\begin{codebox}}\\verb|", x, "|\\nopandoc{\\end{codebox}}")
+  else if (outputFormat == 'html')
+    # http://stackoverflow.com/questions/20409172/how-to-display-verbatim-inline-r-code-with-backticks-using-rmarkdown
+    paste0("<", type," class='codebox'>`` ", x, " ``</", type, ">")
+  else
+    x
+}
+
+#' @rdname verbatimFmt
 #' @export
 beginVerbatim <- function() {
   outputFormat <- knitr:::pandoc_to()
@@ -103,12 +125,10 @@ beginVerbatim <- function() {
   }
 }
 
-#' @rdname beginVerbatim
+#' @rdname verbatimFmt
 #'
-#' @return
 #' @export
 #'
-#' @examples
 endVerbatim <- function() {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {

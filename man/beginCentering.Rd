@@ -3,12 +3,12 @@
 \name{beginCentering}
 \alias{beginCentering}
 \alias{endCentering}
-\title{Title}
+\title{Center text on HTML or PDF output}
 \usage{
 beginCentering()
 
 endCentering()
 }
 \description{
-Title
+Center text on HTML or PDF output
 }
