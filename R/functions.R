@@ -69,7 +69,7 @@ endStyleFmt <- function(textstyle, type = "span") {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {
     if (type %in% c("div", "p")) {
-      cat("\n\nopandoc{\\end{", textstyle, "}}", sep = "")
+      cat("\n\\nopandoc{\\end{", textstyle, "}}", sep = "")
     } else {
       paste0("}}")
     }
