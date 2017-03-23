@@ -1,9 +1,8 @@
-#' Simple color Format functions 
+#' Simple color format functions
 #'
-#' @param x 
-#' @param colorname 
-#' @param type 
-#' @return
+#' @param x texte to be formatted
+#' @param colorname colorname as known by latex or html (red, blue, ...)
+#' @param type html output format. Default to span.
 #' @export
 colFmt <- function(x, colorname, type = "span") {
   outputFormat <- knitr:::pandoc_to()
@@ -15,12 +14,14 @@ colFmt <- function(x, colorname, type = "span") {
     x
 }
 
-#' Style format function, not specific for textcolor
+#' Style format function
+#' 
+#' Style is not only for textcolor
 #'
-#' @param x 
-#' @param textstyle 
-#' @param type 
-#' @return
+#' @param x texte to be formatted
+#' @param textstyle name of the style as defined in lateX header file and/or in css
+#' @param type html output format. Default to span. "div" and "p" also act
+#' differently with lateX outputs by using \\begin and \\end environments
 #' @export
 styleFmt <- function(x, textstyle, type = "span") {
   outputFormat <- knitr:::pandoc_to()
@@ -34,28 +35,33 @@ styleFmt <- function(x, textstyle, type = "span") {
 
 #' @rdname styleFmt
 #' @details
-#' # This function need to be used with an additional in_header file
-#' # For a PDF, this needs to be included in your header.tex file
-#' \\definecolor{advertcolor}{HTML}{FF8929}
-#' \\newcommand{\\advert}[1]{\\textit{\\textcolor{advertcolor}{#1}}}
-#'      % -- command for pandoc trick with \begin and \end -- %
-#' \\newcommand{\\nopandoc}[1]{#1} 
+#' For a correct rendering, this function may need to be used in a "cat"
+#' environment
 #' 
+#' This function need to be used with an additional in_header file.\cr
+#' For a PDF, this needs to be included in your header.tex file:\cr
+#' \\definecolor\{advertcolor\}\{HTML\}\{FF8929\}\cr
+#' \\newcommand\{\\advert\}[1]\{\\textit\{\\textcolor\{advertcolor\}\{#1\}\}\}\cr
+#'      \% -- command for pandoc trick with \\begin and \\end --  \%\cr
+#' \\newcommand\{\\nopandoc\}[1]\{#1\}
+#' @examples
+#' \dontrun{
+#' cat(
+#'   beginStyleFmt("formattype"), "texte to format",
+#'   endStyleFmt("formattype"),
+#' sep = "")
+#' }
 #' @export
 beginStyleFmt <- function(textstyle, type = "span") {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {
     if (type %in% c("div", "p")) {
-      cat("\\nopandoc{\\begin{", textstyle, "}}\n", sep = "")
+      paste0("\\nopandoc{\\begin{", textstyle, "}}\n")
     } else {
       paste0("\\nopandoc{\\", textstyle, "{")
     }
   } else if (outputFormat == 'html') {
-    if (type == "div") {
-      cat("<", type, " class='", textstyle, "'>", sep = "")
-    } else {
       paste0("<", type, " class='", textstyle, "'>")
-    }
   } else {
     ""
   }
@@ -69,16 +75,12 @@ endStyleFmt <- function(textstyle, type = "span") {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {
     if (type %in% c("div", "p")) {
-      cat("\n\\nopandoc{\\end{", textstyle, "}}", sep = "")
+      paste0("\n\\nopandoc{\\end{", textstyle, "}}")
     } else {
       paste0("}}")
     }
   } else if (outputFormat == 'html') {
-    if (type == "div") {
-      cat("</", type, ">", sep = "")
-    } else {
       paste0("</", type, ">")
-    }
   } else {
     ""
   }
@@ -87,17 +89,17 @@ endStyleFmt <- function(textstyle, type = "span") {
 #' Specific to verbatim environment 
 #' to be able to show 'asis' chunks with background color.
 #'
-#' @param x 
+#' @param x text to be formatted
 #' @param type "span" or "p" for html output
-#' @details codebox has to be defined in header.tex or css file
-#' % Here for lateX %
-#' \\newsavebox{\\selvestebox}
-#' \\newenvironment{codebox}{
-#'   \\begin{lrbox}{\\selvestebox}%
-#' }{
-#'   \\end{lrbox}%
-#'   \\colorbox[HTML]{E0E0E0}{\\usebox{\\selvestebox}}
-#' }
+#' @details codebox has to be defined in header.tex or css file\cr
+#' \% Here for lateX \%\cr
+#' \\newsavebox\{\\selvestebox\}\cr
+#' \\newenvironment\{codebox\}\{\cr
+#'   \\begin\{lrbox\}\{\\selvestebox\}\%\cr
+#' \}\{\cr
+#'   \\end\{lrbox\}\%\cr
+#'   \\colorbox[HTML]\{E0E0E0\}\{\\usebox\{\\selvestebox\}\}\cr
+#' \}
 
 #' @return environment for specific format defined in header.tex or css file
 #' @export
@@ -142,10 +144,8 @@ endVerbatim <- function() {
 
 #' Center text on HTML or PDF output
 #'
-#' @return
 #' @export
 #'
-#' @examples
 beginCentering <- function() {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer'))
@@ -158,10 +158,8 @@ beginCentering <- function() {
 
 #' @rdname beginCentering
 #'
-#' @return
 #' @export
 #'
-#' @examples
 endCentering <- function() {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer'))

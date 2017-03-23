@@ -14,7 +14,7 @@ beginVerbatim()
 endVerbatim()
 }
 \arguments{
-\item{x}{}
+\item{x}{text to be formatted}
 
 \item{type}{"span" or "p" for html output}
 }
@@ -26,13 +26,13 @@ Specific to verbatim environment
 to be able to show 'asis' chunks with background color.
 }
 \details{
-codebox has to be defined in header.tex or css file
-% Here for lateX %
-\\newsavebox{\\selvestebox}
-\\newenvironment{codebox}{
-  \\begin{lrbox}{\\selvestebox}%
-}{
-  \\end{lrbox}%
-  \\colorbox[HTML]{E0E0E0}{\\usebox{\\selvestebox}}
-}
+codebox has to be defined in header.tex or css file\cr
+\% Here for lateX \%\cr
+\\newsavebox\{\\selvestebox\}\cr
+\\newenvironment\{codebox\}\{\cr
+  \\begin\{lrbox\}\{\\selvestebox\}\%\cr
+\}\{\cr
+  \\end\{lrbox\}\%\cr
+  \\colorbox[HTML]\{E0E0E0\}\{\\usebox\{\\selvestebox\}\}\cr
+\}
 }

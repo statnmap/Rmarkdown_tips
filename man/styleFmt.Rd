@@ -4,7 +4,7 @@
 \alias{styleFmt}
 \alias{beginStyleFmt}
 \alias{endStyleFmt}
-\title{Style format function, not specific for textcolor}
+\title{Style format function}
 \usage{
 styleFmt(x, textstyle, type = "span")
 
@@ -13,20 +13,32 @@ beginStyleFmt(textstyle, type = "span")
 endStyleFmt(textstyle, type = "span")
 }
 \arguments{
-\item{x}{}
+\item{x}{texte to be formatted}
 
-\item{textstyle}{}
+\item{textstyle}{name of the style as defined in lateX header file and/or in css}
 
-\item{type}{}
+\item{type}{html output format. Default to span. "div" and "p" also act
+differently with lateX outputs by using \\begin and \\end environments}
 }
 \description{
-Style format function, not specific for textcolor
+Style is not only for textcolor
 }
 \details{
-# This function need to be used with an additional in_header file
-# For a PDF, this needs to be included in your header.tex file
-\\definecolor{advertcolor}{HTML}{FF8929}
-\\newcommand{\\advert}[1]{\\textit{\\textcolor{advertcolor}{#1}}}
-     % -- command for pandoc trick with \begin and \end -- %
-\\newcommand{\\nopandoc}[1]{#1}
+For a correct rendering, this function may need to be used in a "cat"
+environment
+
+This function need to be used with an additional in_header file.\cr
+For a PDF, this needs to be included in your header.tex file:\cr
+\\definecolor\{advertcolor\}\{HTML\}\{FF8929\}\cr
+\\newcommand\{\\advert\}[1]\{\\textit\{\\textcolor\{advertcolor\}\{#1\}\}\}\cr
+     \% -- command for pandoc trick with \\begin and \\end --  \%\cr
+\\newcommand\{\\nopandoc\}[1]\{#1\}
+}
+\examples{
+\dontrun{
+cat(
+  beginStyleFmt("formattype"), "texte to format",
+  endStyleFmt("formattype"),
+sep = "")
+}
 }

@@ -2,17 +2,17 @@
 % Please edit documentation in R/functions.R
 \name{colFmt}
 \alias{colFmt}
-\title{Simple color Format functions}
+\title{Simple color format functions}
 \usage{
 colFmt(x, colorname, type = "span")
 }
 \arguments{
-\item{x}{}
+\item{x}{texte to be formatted}
 
-\item{colorname}{}
+\item{colorname}{colorname as known by latex or html (red, blue, ...)}
 
-\item{type}{}
+\item{type}{html output format. Default to span.}
 }
 \description{
-Simple color Format functions
+Simple color format functions
 }
