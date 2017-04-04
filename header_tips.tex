@@ -67,6 +67,13 @@
     \end{snugshade}%
 }
 
+\newenvironment{yellowShaded}[1][FCFF99]{
+  \definecolor{shadecolor}{HTML}{#1}%
+  \begin{snugshade}%
+}{%
+    \end{snugshade}%
+}
+
 % - code background environment inline - %
 \newsavebox{\selvestebox}
 \newenvironment{codebox}{

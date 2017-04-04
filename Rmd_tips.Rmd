@@ -56,6 +56,32 @@ knit_hooks$set(source = function(x, options) {
      hook_source_def(x, options)
   }
 })
+
+# # Modify output chunk background colou
+# hook_output_def = knit_hooks$get('output')
+# knit_hooks$set(output = function(x, options) {
+#   if (!is.null(options$backcolor)) {
+#         outputFormat <- knitr:::pandoc_to()
+#     if (outputFormat == 'latex') {
+#       bg.begin <- paste(
+#         "\\newenvironment{backcolorShaded}[1][", options$backcolor,"]{\n
+#       \\definecolor{shadecolor}{HTML}{#1}% \n
+#       \\begin{snugshade}% \n
+#       }{% \n
+#       \\end{snugshade}% \n
+#       }\n",
+#       "\\begin{backcolorShaded}\\begin{verbatim}")
+#       bg.end <- "\\end{verbatim}\\end{backcolorShaded}"
+#     } else {
+#       bg.begin <- paste("<div class='backcolorShaded', style='background-color:", options$backcolor, "'>\n```")
+#       bg.end <- "```\n</div>"
+#     }
+#     stringr::str_c(bg.begin, paste(knitr:::indent_block(x, "  "), collapse = '\n'), bg.end)
+#   } else {
+#     hook_output_def(x, options)
+#   }
+# })
+
 # Source the formatting functions detailed below
 # source("./R/functions.R")
 # devtools::install_github("statnmap/Rmarkdown_tips")
@@ -65,25 +91,24 @@ library(KnitFmt)
 `r if (lang == "EN") {knitr::include_graphics('./myfigdirectory/gb.png', dpi = 400)} else if (lang == "FR") {knitr::include_graphics('./myfigdirectory/fr.png', dpi = 400)}` `r if (lang == "EN") {"This version is the english version."} else if (lang == "FR") {"Cette version est la version française."}`  
 
 <!-- english -->
+`r if (knitr:::pandoc_to() == "html") {beginStyleFmt("Large", "div")}`
 ```{r WebsiteEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
-if (knitr:::pandoc_to() == "html") {beginStyleFmt("Large", "div")}
 cat(
 'Go back on my website:  
 [![](./myfigdirectory/Logo_EN_small.png)](https://statnmap.com/en/)  
 [HOME](https://statnmap.com/en/) | [BLOG](https://statnmap.com/en/category/blog/) | [TUTORIALS](https://statnmap.com/en/courses-formation-sig-dans-r-et-qgis/) | [CONTACT](https://statnmap.com/en/contact/)',
 sep = "")
-if (knitr:::pandoc_to() == "html") {endStyleFmt("Large", "div")}
 ```
 <!-- french -->
 ```{r WebsiteFR, echo=FALSE, eval=(lang == "FR"), results='asis'}
-if (knitr:::pandoc_to() == "html") {beginStyleFmt("Large", "div")}
 cat(
 'Retourner sur le site Internet :  
 [![](./myfigdirectory/Logo_FR_small.png)](https://statnmap.com/)  
 [ACCUEIL](https://statnmap.com/) | [BLOG](https://statnmap.com/category/blog/) | [FORMATIONS](https://statnmap.com/courses-formation-sig-dans-r-et-qgis/) | [CONTACT](https://statnmap.com/en/contact/)',
 sep = "")
-if (knitr:::pandoc_to() == "html") {endStyleFmt("Large", "div")}
 ```
+`r if (knitr:::pandoc_to() == "html") {endStyleFmt("Large", "div")}`
+
 
 <!-- english -->
 ```{r PresentEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
@@ -178,13 +203,13 @@ L\'option ', styleFmt("type", "codecommand"), ' permet notamment d\'utiliser ', 
 sep = "")
 ```
 ```{r R-functions, echo=TRUE, purl=FALSE, eval=FALSE}
-# Simple color Format functions 
+# Simple text color format functions 
 colFmt <- function(x, colorname, type = "span") {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer'))
     paste0("\\textcolor{", colorname, "}{", x, "}")
   else if (outputFormat == 'html')
-    paste0("<", type, " class='", colorname, "'>", x, "</", type, ">")
+    paste0("<", type, " style='color:", colorname, "'>", x, "</", type, ">")
   else
     x
 }
@@ -198,21 +223,18 @@ styleFmt <- function(x, textstyle, type = "span") {
   else
     x
 }
+
 # Style format options for longer text output
 beginStyleFmt <- function(textstyle, type = "span") {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {
-    if (type == "div") {
-      cat("\\nopandoc\\begin{", textstyle, "}}\n", sep = "")
+    if (type %in% c("div", "p")) {
+      paste0("\\nopandoc{\\begin{", textstyle, "}}\n")
     } else {
-      paste0("\\", textstyle, "{")
+      paste0("\\nopandoc{\\", textstyle, "{")
     }
   } else if (outputFormat == 'html') {
-    if (type == "div") {
-      cat("<", type, " class='", textstyle, "'>", sep = "")
-    } else {
       paste0("<", type, " class='", textstyle, "'>")
-    }
   } else {
     ""
   }
@@ -220,21 +242,18 @@ beginStyleFmt <- function(textstyle, type = "span") {
 endStyleFmt <- function(textstyle, type = "span") {
   outputFormat <- knitr:::pandoc_to()
   if (outputFormat %in% c('latex', 'beamer')) {
-    if (type == "div") {
-      cat("\n\\nopandoc{\\end{", textstyle, "}}", sep = "")
+    if (type %in% c("div", "p")) {
+      paste0("\n\\nopandoc{\\end{", textstyle, "}}")
     } else {
-      paste0("}")
+      paste0("}}")
     }
   } else if (outputFormat == 'html') {
-    if (type == "div") {
-      cat("</", type, ">", sep = "")
-    } else {
       paste0("</", type, ">")
-    }
   } else {
     ""
   }
 }
+
 # Specific inline verbatim environment
 verbatimFmt <- function(x, type = "span") {
   outputFormat <- knitr:::pandoc_to()
@@ -245,6 +264,7 @@ verbatimFmt <- function(x, type = "span") {
   else
     x
 }
+
 # Specific to verbatim environment 
 # to be able to show you the 'asis' chunks with background color.
 beginVerbatim <- function() {
@@ -287,11 +307,17 @@ sep = "")
   \definecolor{blueSeb}{RGB}{30,115,190}
   \definecolor{advertcolor}{HTML}{FF8929}
   
-  \definecolor{backcolor}{RGB}{235, 235, 235}
-  \newcommand{\mybox}[1]{\par\noindent\colorbox{backcolor}
-    {\parbox{\dimexpr\textwidth-2\fboxsep\relax}{#1}}}
+
+  \newenvironment{blueShaded}[1][D6E8F5]{
+  \definecolor{shadecolor}{HTML}{#1}%
+  \begin{snugshade}%
+  }{%
+  \end{snugshade}%
+  }
   
   \newcommand{\advert}[1]{\textit{\advertcolor{#1}}}
+  
+  \definecolor{backcolor}{RGB}{235, 235, 235}
   \newcommand{\codecommand}[1]{\texttt{\colorbox{backcolor}{#1}}}
 ```
 ```{r NoPandocEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
@@ -350,6 +376,33 @@ cat(
 '*[edit: 22 Mars 2017]* Dans mon fichier Rmd, vous remarquerez que j\'utilise la fonction : \\linebreak', styleFmt("styleFmt(\"code\", \"codecommand\")", "codecommand"), ' ou, comme dans ce paragraphe, ', verbatimFmt("verbatimFmt(\"code\")"),
 ' pour mettre en évidence le code intégré dans une ligne de texte. J\'aurai pu utiliser directement la syntaxe markdown avec les "back ticks" ', verbatimFmt("\x60code\x60"), '. Cependant, avec le passage vers lateX cette formulation est transformée en ', verbatimFmt("\\texttt"), ', dont le format peut être modifié, mais s\'appliquerait à tout texte avec ce format, même si ce n\'est pas du code. En HTML, la syntaxe markdown avec les "back ticks" intègre le texte entre deux balises code ', verbatimFmt("<code>code<\\code>"), ' dont le format est directement modifiable avec du css.',
 sep = "")
+```
+
+<!-- english -->
+```{r BgOutputEN, echo=FALSE, eval=(lang == "EN"), results='asis'}
+cat(
+'## Change background color of chunk output
+_[edit: 4 April 2017]_ To modify output background differently for input and output, in HTML, you can use my functions `beginStyleFmt` and `endStyleFmt`, but in your css file, you will have to set the `background-color` of classes `pre` and `code` to `transparent` so that the surrounding div have an effect. However, to be able to do it with PDF or cleanly with HTML, you will have to play with hooks and add a new options for different background for input and output. Here, I can not show it to you for HTML output because I did not wanted to have to set all my others backgrounds. I may later add the modified hooks functions to allow this different background colors for HTML and PDF...',
+sep = "")
+```
+<!-- french -->
+```{r BgOutputFR, echo=FALSE, eval=(lang == "FR"), results='asis'}
+cat(
+'## Changer la couleur d\'arrière-plan des sorties de chunk
+_[edit : 4 avril 2017]_ Pour modifier la couleur de fond d\'un code d\'entrée ou de sortie de chunk en HTML, vous pouvez utiliser mes fonctions `beginStyleFmt` et `endStyleFmt`, mais vous devrez modifier votre css de telle sorte que les arrières-plans (`background-color`) des classes `pre` et `code` soient `transparent` pour que la division ait un effet. Sinon, pour que ça fonctionne aussi en LateX, vous devrez jouer directement avec les "hooks" pour ajouter une nouvelle option pour différente couleur d\'arrière-plan pour les entrées ou sorties. Ici, je n\'ai pas implémenté une couleur d\'arrière-plan différente de l\'originale dans le fichier HTML car je ne voulais pas devoir le définir pour chacun de mes chunks. Plus tard, je proposerai peut-être la modification du "hook" pour implémenter des arrières-plans différents entre entrée et sortie, pour HTML et PDF...',
+sep = "")
+```
+
+`r if (knitr:::pandoc_to() == "html") {beginStyleFmt("A5F7F7", "div")}`
+```{r R-BgOutputEcho, background='green', echo=TRUE, eval=FALSE}
+a <- 1 + 1
+a
+```
+`r if (knitr:::pandoc_to() == "html") {endStyleFmt("A5F7F7", "div")}`
+
+```{r R-BgOutputOut, background='#A5F7F7', echo=FALSE}
+a <- 1 + 1
+a
 ```
 
 <!-- english -->
